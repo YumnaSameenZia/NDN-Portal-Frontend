@@ -7,9 +7,7 @@ const TitlePage = ({ ViewTitlePage, ViewLoginForm }) => {
       <div className="TitlePage">
         <div id="particles-js"></div>
         <div class="bg">
-          <a href="#">
-            <h4>ITTILAH PORTAL</h4>
-          </a>
+          <h4>ITTILAH PORTAL</h4>
         </div>
         <div class="container">
           <button

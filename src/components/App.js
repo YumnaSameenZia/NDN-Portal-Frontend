@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Login from "./Login";
 import TopoBuilder from "./TopoBuilder";
 import TopoViewer from "./TopoViewer";
 import axios from "axios";
 import TitlePage from "./TitlePage";
-import ScriptTag from "react-script-tag";
-import Particles from "react-particles-js";
 import ParticleComponent from "./ParticleComponent";
 
 function App() {
@@ -116,10 +114,11 @@ function App() {
 
   return (
     <div
-    // style={{
-    //   backgroundColor: "#85FFBD",
-    //   backgroundImage: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
-    // }}
+      style={{
+        backgroundColor: "#000",
+        color: "white",
+        // backgroundImage: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
+      }}
     >
       <ParticleComponent />
       <TitlePage

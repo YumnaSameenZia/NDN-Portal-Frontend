@@ -1,7 +1,7 @@
 import React from "react";
 import Particles from "react-particles-js";
 
-export default () => (
+const ParticleComponent = () => (
   <div
     style={{
       position: "absolute",
@@ -121,7 +121,12 @@ export default () => (
           },
         },
         retina_detect: true,
+        config_demo: {
+          background_color: "#000",
+        },
       }}
     />
   </div>
 );
+
+export default ParticleComponent;
