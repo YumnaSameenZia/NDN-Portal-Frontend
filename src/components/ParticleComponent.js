@@ -15,7 +15,7 @@ export default () => (
       params={{
         particles: {
           number: {
-            value: 120,
+            value: 100,
             density: {
               enable: true,
               value_area: 1000,
@@ -50,7 +50,7 @@ export default () => (
             },
           },
           size: {
-            value: 5,
+            value: 3,
             random: true,
             anim: {
               enable: false,
@@ -68,7 +68,7 @@ export default () => (
           },
           move: {
             enable: true,
-            speed: 6,
+            speed: 2,
             direction: "none",
             random: false,
             straight: false,

@@ -9,34 +9,23 @@ import Particles from "react-particles-js";
 import ParticleComponent from "./ParticleComponent";
 
 function App() {
-  useEffect(() => {
-    const script = document.createElement("script");
-    const particles = document.createElement("script");
-
-    script.src = "./main.js";
-    script.async = true;
-    particles.src = "./particles.min.js";
-    particles.async = true;
-
-    document.body.appendChild(script);
-    document.body.appendChild(particles);
-
-    // return () => {
-    //   document.body.removeChild(script);
-    // };
-  }, []);
-
   const [data, setData] = useState({
     nodes: [{ id: "node0" }, { id: "node1" }],
     links: [{ source: "node0", target: "node1" }],
   });
 
   const [ViewTopo, setViewTopo] = useState(false);
+  const [ViewTitlePage, setViewTitlePage] = useState(true);
+  const [ViewLogin, setViewLogin] = useState(false);
+  const ViewLoginForm = () => {
+    setViewTitlePage(false);
+    setViewLogin(true);
+  };
 
   const myConfig = {
     nodeHighlightBehavior: true,
     node: {
-      color: "lightgreen",
+      color: "#42F3FB",
       size: 120,
       highlightStrokeColor: "blue",
     },
@@ -132,16 +121,20 @@ function App() {
     //   backgroundImage: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
     // }}
     >
-      <TitlePage></TitlePage>
       <ParticleComponent />
+      <TitlePage
+        ViewTitlePage={ViewTitlePage}
+        ViewLoginForm={ViewLoginForm}
+      ></TitlePage>
 
-      {/* <Login
+      <Login
         loginInput={loginInput}
         setLoginInput={setLoginInput}
         handleLogin={handleLogin}
         viewBuilder={viewBuilder}
         setViewBuilder={setViewBuilder}
         ViewTopo={ViewTopo}
+        ViewLogin={ViewLogin}
       ></Login>
       <TopoBuilder
         data={data}
@@ -162,7 +155,7 @@ function App() {
         onClickLink={onClickLink}
         onClickNode={onClickNode}
         ViewTopo={ViewTopo}
-      ></TopoViewer> */}
+      ></TopoViewer>
     </div>
   );
 }

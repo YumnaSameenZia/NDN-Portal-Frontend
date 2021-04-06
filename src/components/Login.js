@@ -9,8 +9,9 @@ const Login = ({
   viewBuilder,
   SetViewBuilder,
   ViewTopo,
+  ViewLogin,
 }) => {
-  if (viewBuilder === false && ViewTopo === false) {
+  if (viewBuilder === false && ViewTopo === false && ViewLogin === true) {
     return (
       <div
         style={{
@@ -18,8 +19,8 @@ const Login = ({
           alignItems: "center",
           width: "100%",
           height: "100vh",
-          backgroundColor: "#85FFBD",
-          backgroundImage: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
+          // backgroundColor: "#85FFBD",
+          // backgroundImage: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
           // background: "#36D1DC" /* fallback for old browsers */,
           // background:
           //   "-webkit-linear-gradient(to right, #5B86E5, #36D1DC)" /* Chrome 10-25, Safari 5.1-6 */,
@@ -28,9 +29,9 @@ const Login = ({
         }}
       >
         <Container>
-          <h1 className="text-center" style={{ fontFamily: "Roboto" }}>
+          {/* <h1 className="text-center" style={{ fontFamily: "Roboto" }}>
             NAME DATA NETWORKING(NDN) PORTAL
-          </h1>
+          </h1> */}
           <div style={{ border: "2px solid black", padding: "5px" }}>
             <Row className="justify-content-center">
               <h1 style={{ fontFamily: "Roboto" }}>Login</h1>

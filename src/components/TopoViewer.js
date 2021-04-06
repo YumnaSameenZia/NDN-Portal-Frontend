@@ -19,13 +19,26 @@ const TopoViewer = ({ data, myConfig, onClickLink, onClickNode, ViewTopo }) => {
             backgroundColor: "white",
           }}
         >
-          <Graph
-            id="graph-id" // id is mandatory
-            data={data}
-            config={myConfig}
-            onClickNode={onClickNode}
-            onClickLink={onClickLink}
-          />
+          <Row>
+            <Col>
+              <div
+                style={{
+                  border: "2px solid black",
+                  width: "100%",
+                  height: "50vh",
+                  backgroundColor: "white",
+                }}
+              >
+                <Graph
+                  id="graph-id" // id is mandatory
+                  data={data}
+                  config={myConfig}
+                  onClickNode={onClickNode}
+                  onClickLink={onClickLink}
+                />
+              </div>
+            </Col>
+          </Row>
         </div>
         <Row className="mt-1">
           <Col>
