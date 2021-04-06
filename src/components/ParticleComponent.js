@@ -15,7 +15,7 @@ const ParticleComponent = () => (
       params={{
         particles: {
           number: {
-            value: 100,
+            value: 50,
             density: {
               enable: true,
               value_area: 1000,
@@ -27,7 +27,7 @@ const ParticleComponent = () => (
           shape: {
             type: "circle",
             stroke: {
-              width: 2,
+              width: 1,
               color: "#03bcf4",
             },
             polygon: {
@@ -64,7 +64,7 @@ const ParticleComponent = () => (
             distance: 150,
             color: "#ffffff",
             opacity: 0.4,
-            width: 1,
+            width: 0.5,
           },
           move: {
             enable: true,

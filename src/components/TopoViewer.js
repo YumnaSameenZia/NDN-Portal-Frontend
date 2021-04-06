@@ -43,7 +43,7 @@ const TopoViewer = ({ data, myConfig, onClickLink, onClickNode, ViewTopo }) => {
         <Row className="mt-1">
           <Col>
             <Button variant="secondary" block>
-              CMD
+              Terminal
             </Button>{" "}
           </Col>
           <Col>
