@@ -1,8 +1,12 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import { Graph } from "react-d3-graph";
-import { Container, Button, Row, Col } from "react-bootstrap";
+import axios from "axios";
+import { Container, Button, Row, Col, Form } from "react-bootstrap";
 
 const TopoViewer = ({ data, myConfig, onClickLink, onClickNode, ViewTopo }) => {
+  const [command, setCommand] = useState("");
+  const [output, setOutput] = useState("");
+
   if (ViewTopo) {
     return (
       <Container style={{ height: "100vh" }}>
@@ -45,7 +49,7 @@ const TopoViewer = ({ data, myConfig, onClickLink, onClickNode, ViewTopo }) => {
             </Button>{" "}
           </Col>
         </Row>
-        <Row className="pt-3">
+        {/* <Row className="pt-3">
           <Col style={{ border: "3px solid black" }}>CS Entry</Col>
           <Col style={{ border: "3px solid black" }}>CS Data</Col>
         </Row>
@@ -55,6 +59,48 @@ const TopoViewer = ({ data, myConfig, onClickLink, onClickNode, ViewTopo }) => {
           </Col>
           <Col style={{ border: "3px solid black", height: "150px" }}>
             Cached content at Node 1
+          </Col>
+        </Row> */}
+
+        {/* Writing Command part here */}
+        <Row className="pt-3">
+          <Col>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              disabled
+              placeholder="See output here"
+              value={output}
+            />
+            <Form.Control
+              type="text"
+              className="mt-1"
+              placeholder="Write command here"
+              value={command}
+              onChange={(event) => {
+                setCommand(event.target.value);
+              }}
+            ></Form.Control>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="text-center">
+            <Button
+              className="mt-1"
+              style={{ width: "6em" }}
+              onClick={(event) => {
+                axios
+                  .post("http://localhost:3001/command", {
+                    command: command,
+                  })
+                  .then((response) => {
+                    console.log(response.data);
+                    setOutput(response.data);
+                  });
+              }}
+            >
+              Run
+            </Button>
           </Col>
         </Row>
       </Container>

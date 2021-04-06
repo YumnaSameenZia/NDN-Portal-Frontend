@@ -111,12 +111,12 @@ const TopoBuilder = ({
             <Button variant="secondary" onClick={createTopology} block>
               Submit
             </Button>{" "}
-            <Button variant="secondary" block>
+            {/* <Button variant="secondary" block>
               Delete
             </Button>
             <Button variant="secondary" block>
               Go Back
-            </Button>{" "}
+            </Button>{" "} */}
           </Col>
           <Col>
             <div

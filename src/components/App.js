@@ -1,10 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Login from "./Login";
 import TopoBuilder from "./TopoBuilder";
 import TopoViewer from "./TopoViewer";
 import axios from "axios";
+import TitlePage from "./TitlePage";
+import ScriptTag from "react-script-tag";
+import Particles from "react-particles-js";
+import ParticleComponent from "./ParticleComponent";
 
 function App() {
+  useEffect(() => {
+    const script = document.createElement("script");
+    const particles = document.createElement("script");
+
+    script.src = "./main.js";
+    script.async = true;
+    particles.src = "./particles.min.js";
+    particles.async = true;
+
+    document.body.appendChild(script);
+    document.body.appendChild(particles);
+
+    // return () => {
+    //   document.body.removeChild(script);
+    // };
+  }, []);
+
   const [data, setData] = useState({
     nodes: [{ id: "node0" }, { id: "node1" }],
     links: [{ source: "node0", target: "node1" }],
@@ -106,12 +127,15 @@ function App() {
 
   return (
     <div
-      style={{
-        backgroundColor: "#85FFBD",
-        backgroundImage: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
-      }}
+    // style={{
+    //   backgroundColor: "#85FFBD",
+    //   backgroundImage: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
+    // }}
     >
-      <Login
+      <TitlePage></TitlePage>
+      <ParticleComponent />
+
+      {/* <Login
         loginInput={loginInput}
         setLoginInput={setLoginInput}
         handleLogin={handleLogin}
@@ -138,7 +162,7 @@ function App() {
         onClickLink={onClickLink}
         onClickNode={onClickNode}
         ViewTopo={ViewTopo}
-      ></TopoViewer>
+      ></TopoViewer> */}
     </div>
   );
 }
