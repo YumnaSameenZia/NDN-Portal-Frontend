@@ -29,12 +29,12 @@ const TopoBuilder = ({
         <h1 style={{ fontFamily: "Roboto", paddingTop: "20px" }}>TOPOLOGY</h1>
         <Row style={makeTopo ? {} : { height: "85vh" }}>
           <Col>
-            <Button variant="secondary" block onClick={() => setMakeTopo(true)}>
+            <Button variant="secondary" block onClick={() => setMakeTopo(true)} data-testid="create-topology-button">
               Create Topology
             </Button>{" "}
           </Col>
           <Col>
-            <Button variant="secondary" block onClick={createTopology}>
+            <Button variant="secondary" block onClick={createTopology} data-testid="view-topology-button">
               View Topology
             </Button>{" "}
           </Col>
