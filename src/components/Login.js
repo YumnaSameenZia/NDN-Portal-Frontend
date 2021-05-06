@@ -42,6 +42,7 @@ const Login = ({
                   <Form.Group controlId="formBasicEmail">
                     <Form.Label>Username</Form.Label>
                     <Form.Control
+                    data-testid="login-form-username"
                       type="text"
                       placeholder="Enter Username"
                       value={loginInput.username}
@@ -60,6 +61,7 @@ const Login = ({
                   <Form.Group controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control
+                    data-testid="login-form-password"
                       type="password"
                       placeholder="Password"
                       value={loginInput.password}
