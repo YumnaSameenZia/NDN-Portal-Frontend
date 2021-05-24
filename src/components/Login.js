@@ -1,6 +1,5 @@
 import React from "react";
-import { Container, Row, Form, Col } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
+import { Container, Button, Alert, Row, Form, Col } from "react-bootstrap";
 
 const Login = ({
   loginInput,
@@ -42,7 +41,7 @@ const Login = ({
                   <Form.Group controlId="formBasicEmail">
                     <Form.Label>Username</Form.Label>
                     <Form.Control
-                    data-testid="login-form-username"
+                      data-testid="login-form-username"
                       type="text"
                       placeholder="Enter Username"
                       value={loginInput.username}
@@ -61,7 +60,7 @@ const Login = ({
                   <Form.Group controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control
-                    data-testid="login-form-password"
+                      data-testid="login-form-password"
                       type="password"
                       placeholder="Password"
                       value={loginInput.password}

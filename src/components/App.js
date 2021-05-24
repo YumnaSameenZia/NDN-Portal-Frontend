@@ -5,6 +5,7 @@ import TopoViewer from "./TopoViewer";
 import axios from "axios";
 import TitlePage from "./TitlePage";
 import ParticleComponent from "./ParticleComponent";
+import { Popover } from "react-bootstrap";
 
 function App() {
   const [data, setData] = useState({
@@ -33,7 +34,7 @@ function App() {
   };
 
   const onClickNode = function (nodeId) {
-    window.alert(`Clicked node ${nodeId}`);
+    console.log(nodeId);
   };
 
   const onClickLink = function (source, target) {
@@ -51,10 +52,16 @@ function App() {
     password: "",
   });
 
+  const [nodeCordinates, setNodeCordinates] = useState({ x: 20, y: 20 });
   const addNode = () => {
     setNodesNum(nodesNum + 1);
-    const nodes = data.nodes.concat({ id: `node${nodesNum}` });
+    const nodes = data.nodes.concat({
+      id: `node${nodesNum}`,
+      x: nodeCordinates.x,
+      y: nodeCordinates.y,
+    });
     setData({ nodes: nodes, links: data.links });
+    setNodeCordinates({ x: nodeCordinates.x + 5, y: nodeCordinates.y + 10 });
   };
 
   const addLink = () => {
@@ -118,6 +125,7 @@ function App() {
         backgroundColor: "#000",
         color: "white",
         // backgroundImage: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
+        overflowY: "scroll",
       }}
     >
       <ParticleComponent />
@@ -147,6 +155,7 @@ function App() {
         onClickNode={onClickNode}
         ViewTopo={ViewTopo}
         viewBuilder={viewBuilder}
+        username={loginInput.username}
       ></TopoBuilder>
       <TopoViewer
         data={data}

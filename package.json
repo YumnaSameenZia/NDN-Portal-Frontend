@@ -18,6 +18,7 @@
     "react-particles-js": "^3.4.1",
     "react-script-tag": "^1.1.2",
     "react-scripts": "4.0.3",
+    "terminal-in-react": "^4.3.1",
     "web-vitals": "^1.1.0"
   },
   "scripts": {

@@ -3,6 +3,7 @@ import { Graph } from "react-d3-graph";
 import {
   Container,
   Button,
+  Alert,
   Row,
   Col,
   InputGroup,
@@ -21,26 +22,56 @@ const TopoBuilder = ({
   onClickNode,
   ViewTopo,
   viewBuilder,
+  username,
 }) => {
   const [makeTopo, setMakeTopo] = useState(false);
+  const [showAlert, setShowAlert] = useState(true);
+
+  const alertMessage = () => {
+    if (showAlert) {
+      return (
+        <Alert
+          variant="success"
+          onClose={() => setShowAlert(false)}
+          dismissible
+          transition
+        >
+          Welcome back {username}!
+        </Alert>
+      );
+    } else {
+      return null;
+    }
+  };
+
   if (viewBuilder === true) {
     return (
       <Container>
+        {alertMessage()}
         <h1 style={{ fontFamily: "Roboto", paddingTop: "20px" }}>TOPOLOGY</h1>
         <Row style={makeTopo ? {} : { height: "85vh" }}>
           <Col>
-            <Button variant="secondary" block onClick={() => setMakeTopo(true)} data-testid="create-topology-button">
+            <Button
+              variant="secondary"
+              block
+              onClick={() => setMakeTopo(true)}
+              data-testid="create-topology-button"
+            >
               Create Topology
             </Button>{" "}
           </Col>
           <Col>
-            <Button variant="secondary" block onClick={createTopology} data-testid="view-topology-button">
+            <Button
+              variant="secondary"
+              block
+              onClick={createTopology}
+              data-testid="view-topology-button"
+            >
               View Topology
             </Button>{" "}
           </Col>
         </Row>
         <br></br>
-
         <Row className={makeTopo ? "" : "d-none"}>
           <Col className="justify-content-right">
             <br></br>
