@@ -8,24 +8,74 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
   const [command, setCommand] = useState("");
   const [output, setOutput] = useState("");
 
-  const [nodeClicked, setNodeClicked] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const onClickNode = (nodeID) => {
-    setNodeClicked(nodeID.toString());
-    setShowModal(true);
+  /* TERMINAL RELATED METHODS AND STATES */
+
+  const [showTerminal, setShowTerminal] = useState(true);
+  const terminal = () => {
+    if (showTerminal) {
+      return (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "5px",
+          }}
+        >
+          <Terminal
+            color="green"
+            backgroundColor="black"
+            barColor="black"
+            style={{
+              marginTop: "5px",
+              border: "1px solid white",
+              fontWeight: "bold",
+              fontSize: "1em",
+              height: "500px",
+            }}
+            startState="maximised"
+            commands={{
+              "open-google": () =>
+                window.open("https://www.google.com/", "_blank"),
+              popup: () => alert("Terminal in React"),
+              showmsg: () => {
+                return "Hello World!";
+              },
+            }}
+            descriptions={{
+              "open-google": "opens google.com",
+              showmsg: "shows a message",
+              alert: "alert",
+              popup: "alert",
+            }}
+            msg="You can write anything here. Example - Hello! My name is Foo and I like Bar."
+          />
+        </div>
+      );
+    } else {
+      return null;
+    }
   };
 
-  const [showTable, setShowTable] = useState(true);
+  /* TABLE RELATED METHODS AND STATES */
+
+  const [structure, setStructure] = useState("");
+  const handleClick = (structureName) => {
+    setShowTerminal(false);
+    setShowTable(true);
+    setStructure(structureName);
+  };
+  const [showTable, setShowTable] = useState(false);
   const table = () => {
     if (showTable) {
       return (
         <>
           <Row className="pt-3">
             <Col style={{ border: "3px solid white" }}>
-              <strong>CS Entry</strong>
+              <strong>{structure} Entry</strong>
             </Col>
             <Col style={{ border: "3px solid white" }}>
-              <strong>CS Data</strong>
+              <strong>{structure} Data</strong>
             </Col>
           </Row>
           <Row>
@@ -43,31 +93,62 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
     }
   };
 
+  /* QUICK COMMANDS RELATED TO NODES */
+
+  const [nodeClicked, setNodeClicked] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const onClickNode = (nodeID) => {
+    setNodeClicked(nodeID.toString());
+    setShowModal(true);
+  };
+  const modal = () => {
+    return (
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{nodeClicked}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Button variant="primary">Command!</Button>
+          </Container>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setShowModal(false);
+              setOutput("Output of command!");
+            }}
+          >
+            Click Me!
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  // SHOW LOADING SCREEN
+
+  const [showLoading, setShowLoading] = useState(false);
+  const loadingOverlay = () => {
+    return (
+      <Modal
+        show={showLoading}
+        onHide={() => setShowLoading(false)}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Body>Performing operation, please wait awhile...</Modal.Body>
+      </Modal>
+    );
+  };
+
   if (ViewTopo) {
     return (
       <Container style={{ height: "100vh" }}>
-        <Modal show={showModal} onHide={() => setShowModal(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>{nodeClicked}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Container>
-              <Button variant="primary">Command!</Button>
-            </Container>
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button
-              variant="primary"
-              onClick={() => {
-                setShowModal(false);
-                setOutput("Output of command!");
-              }}
-            >
-              Click Me!
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        {loadingOverlay()}
+        {modal()}
         <h1 style={{ fontFamily: "Roboto" }}>Topology Viewer</h1>
         <div
           style={{
@@ -100,106 +181,53 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
         </div>
 
         <Container>
-          <Row className="mt-1">
+          <Row className="mt-1" class="text-center">
             <Col>
-              <Button variant="secondary" block>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setShowTerminal(true);
+                  setShowTable(false);
+                }}
+                block
+              >
                 Terminal
               </Button>{" "}
             </Col>
             <Col>
-              <Button variant="secondary" block>
-                CS
-              </Button>{" "}
-            </Col>
-            <Col>
-              <Button variant="secondary" block>
-                PIT
-              </Button>{" "}
-            </Col>
-            <Col>
-              <Button variant="secondary" block>
-                FIB
-              </Button>{" "}
-            </Col>
-          </Row>
-          {table}
-        </Container>
-
-        {/* Writing Command part here */}
-        {/* <>
-          <Row className="pt-3">
-            <Col>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                disabled
-                placeholder="See output here"
-                value={output}
-              />
-              <Form.Control
-                type="text"
-                className="mt-1"
-                placeholder="Write command here"
-                value={command}
-                onChange={(event) => {
-                  setCommand(event.target.value);
-                }}
-              ></Form.Control>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="text-center">
               <Button
-                className="mt-1"
-                style={{ width: "6em" }}
-                onClick={(event) => {
-                  axios
-                    .post("http://localhost:3001/command", {
-                      command: command,
-                    })
-                    .then((response) => {
-                      console.log(response.data);
-                      setOutput(response.data);
-                    });
+                variant="secondary"
+                onClick={() => {
+                  setShowLoading(true);
+                  axios.get("http://localhost:3001/start");
+                  setTimeout(() => {
+                    setShowLoading(false);
+                  }, 10000);
                 }}
+                block
               >
-                Run
-              </Button>
+                Start NDN Stack
+              </Button>{" "}
+            </Col>
+            <Col>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setShowLoading(true);
+                  axios.get("http://localhost:3001/stop");
+                  setTimeout(() => {
+                    setShowLoading(false);
+                  }, 2000);
+                }}
+                block
+              >
+                Stop NDN Stack
+              </Button>{" "}
             </Col>
           </Row>
-        </> */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-            width: "100%",
-          }}
-        >
-          <Terminal
-            color="green"
-            backgroundColor="grey"
-            barColor="black"
-            style={{
-              fontWeight: "bold",
-              fontSize: "1em",
-              height: "250px",
-            }}
-            commands={{
-              "open-google": () =>
-                window.open("https://www.google.com/", "_blank"),
-              popup: () => alert("Terminal in React"),
-            }}
-            descriptions={{
-              "open-google": "opens google.com",
-              showmsg: "shows a message",
-              alert: "alert",
-              popup: "alert",
-            }}
-            msg="You can write anything here. Example - Hello! My name is Foo and I like Bar."
-          />
-        </div>
+          {table()}
+        </Container>
+        {terminal()}
       </Container>
     );
   } else {

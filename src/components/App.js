@@ -128,7 +128,7 @@ function App() {
         overflowY: "scroll",
       }}
     >
-      <ParticleComponent />
+      {/* <ParticleComponent /> */}
       <TitlePage
         ViewTitlePage={ViewTitlePage}
         ViewLoginForm={ViewLoginForm}
