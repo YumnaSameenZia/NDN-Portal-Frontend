@@ -1,59 +1,42 @@
 import { React, useState } from "react";
 import { Graph } from "react-d3-graph";
 import axios from "axios";
-import Terminal from "terminal-in-react";
-import { Container, Button, Row, Col, Form, Modal } from "react-bootstrap";
+import {
+  Container,
+  Button,
+  Row,
+  Col,
+  Form,
+  Modal,
+  ProgressBar,
+} from "react-bootstrap";
+import { ReactTerminal } from "react-terminal";
 
 const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
-  const [command, setCommand] = useState("");
+  const [count, setCount] = useState(0);
   const [output, setOutput] = useState("");
 
   /* TERMINAL RELATED METHODS AND STATES */
 
-  const [showTerminal, setShowTerminal] = useState(true);
+  const [showTerminal, setShowTerminal] = useState(false);
+  const commands = {
+    whoami: "A speck of dust in grand cosmos",
+    net: () => onClickCmd(`net run`),
+    iperf: () => onClickCmd(`iperf`),
+  };
   const terminal = () => {
     if (showTerminal) {
       return (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "5px",
-          }}
-        >
-          <Terminal
-            color="green"
-            backgroundColor="black"
-            barColor="black"
-            style={{
-              marginTop: "5px",
-              border: "1px solid white",
-              fontWeight: "bold",
-              fontSize: "1em",
-              height: "500px",
-            }}
-            startState="maximised"
-            commands={{
-              "open-google": () =>
-                window.open("https://www.google.com/", "_blank"),
-              popup: () => alert("Terminal in React"),
-              showmsg: () => {
-                return "Hello World!";
-              },
-            }}
-            descriptions={{
-              "open-google": "opens google.com",
-              showmsg: "shows a message",
-              alert: "alert",
-              popup: "alert",
-            }}
-            msg="You can write anything here. Example - Hello! My name is Foo and I like Bar."
-          />
+        <div style={{ position: "relative", marginTop: "5px" }}>
+          <ReactTerminal commands={commands} />
         </div>
       );
     } else {
-      return null;
+      return (
+        <Form style={{ marginTop: "5px", position: "relative" }}>
+          <Form.Control as="textarea" rows={7} disabled value={output} />
+        </Form>
+      );
     }
   };
 
@@ -97,10 +80,23 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
 
   const [nodeClicked, setNodeClicked] = useState("");
   const [showModal, setShowModal] = useState(false);
+
   const onClickNode = (nodeID) => {
     setNodeClicked(nodeID.toString());
     setShowModal(true);
   };
+
+  const onClickCmd = async (cmd) => {
+    setShowModal(false);
+    setShowLoading(true);
+    let result = await axios.post("http://localhost:3001/command", {
+      command: cmd,
+    });
+    await setOutput(result.data);
+    setShowLoading(false);
+    return result.data;
+  };
+
   const modal = () => {
     return (
       <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -108,8 +104,26 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
           <Modal.Title>{nodeClicked}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Container>
-            <Button variant="primary">Command!</Button>
+          <Container
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
+            <Button
+              variant="primary"
+              onClick={() => onClickCmd(`${nodeClicked} nfdc status report`)}
+            >
+              NFD Status
+            </Button>
+
+            <Button variant="primary" onClick={() => onClickCmd(`net run`)}>
+              Network Status
+            </Button>
+
+            <Button
+              variant="primary"
+              onClick={() => onClickCmd(`${nodeClicked} nlsrc status`)}
+            >
+              NLSR Status
+            </Button>
           </Container>
         </Modal.Body>
 
@@ -118,10 +132,9 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
             variant="primary"
             onClick={() => {
               setShowModal(false);
-              setOutput("Output of command!");
             }}
           >
-            Click Me!
+            Close
           </Button>
         </Modal.Footer>
       </Modal>
@@ -130,7 +143,7 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
 
   // SHOW LOADING SCREEN
 
-  const [showLoading, setShowLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
   const loadingOverlay = () => {
     return (
       <Modal
@@ -140,11 +153,19 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
         keyboard={false}
       >
         <Modal.Body>Performing operation, please wait awhile...</Modal.Body>
+        <ProgressBar animated now={50} />
+        <Modal.Footer></Modal.Footer>
       </Modal>
     );
   };
 
   if (ViewTopo) {
+    if (count === 0) {
+      setTimeout(() => {
+        setShowLoading(false);
+        setCount(1);
+      }, 20000);
+    }
     return (
       <Container style={{ height: "100vh" }}>
         {loadingOverlay()}
@@ -186,7 +207,7 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
               <Button
                 variant="secondary"
                 onClick={() => {
-                  setShowTerminal(true);
+                  setShowTerminal(!showTerminal);
                   setShowTable(false);
                 }}
                 block
@@ -202,7 +223,7 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
                   axios.get("http://localhost:3001/start");
                   setTimeout(() => {
                     setShowLoading(false);
-                  }, 10000);
+                  }, 20000);
                 }}
                 block
               >

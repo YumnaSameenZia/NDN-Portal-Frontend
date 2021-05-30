@@ -125,10 +125,10 @@ function App() {
         backgroundColor: "#000",
         color: "white",
         // backgroundImage: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
-        overflowY: "scroll",
+        overflow: "hidden",
       }}
     >
-      {/* <ParticleComponent /> */}
+      <ParticleComponent />
       <TitlePage
         ViewTitlePage={ViewTitlePage}
         ViewLoginForm={ViewLoginForm}
