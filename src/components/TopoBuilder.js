@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Graph } from "react-d3-graph";
+import { useHistory } from "react-router-dom";
 import {
   Container,
   Button,
@@ -25,6 +26,7 @@ const TopoBuilder = ({
   viewBuilder,
   username,
 }) => {
+  const history = useHistory();
   const [makeTopo, setMakeTopo] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
 
@@ -250,7 +252,7 @@ const TopoBuilder = ({
             <Button
               variant="secondary"
               block
-              onClick={createTopology}
+              onClick={() => createTopology(history)}
               data-testid="view-topology-button"
             >
               View Topology
@@ -309,7 +311,11 @@ const TopoBuilder = ({
             <br></br>
             <br></br>
             <br></br>
-            <Button variant="secondary" onClick={createTopology} block>
+            <Button
+              variant="secondary"
+              onClick={() => createTopology(history)}
+              block
+            >
               Submit
             </Button>{" "}
             {/* <Button variant="secondary" block>
