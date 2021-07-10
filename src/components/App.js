@@ -5,7 +5,6 @@ import TopoViewer from "./TopoViewer";
 import axios from "axios";
 import TitlePage from "./TitlePage";
 import ParticleComponent from "./ParticleComponent";
-import { Popover } from "react-bootstrap";
 
 function App() {
   const [data, setData] = useState({
@@ -53,18 +52,24 @@ function App() {
   });
 
   const [nodeCordinates, setNodeCordinates] = useState({ x: 20, y: 20 });
-  const addNode = () => {
+  const addNode = (memory, radius, cache, angle, cpu) => {
+    console.log(memory, radius, cache, angle, cpu);
     setNodesNum(nodesNum + 1);
     const nodes = data.nodes.concat({
       id: `node${nodesNum}`,
       x: nodeCordinates.x,
       y: nodeCordinates.y,
+      memory,
+      radius,
+      cache,
+      angle,
+      cpu,
     });
     setData({ nodes: nodes, links: data.links });
     setNodeCordinates({ x: nodeCordinates.x + 5, y: nodeCordinates.y + 10 });
   };
 
-  const addLink = () => {
+  const addLink = (bandwidth, delay, loss) => {
     const var1 = data.nodes.find((node) => node.id === linkInput.sourceInput);
     const var2 = data.nodes.find(
       (node) => node.id === linkInput.destinationInput
@@ -81,7 +86,11 @@ function App() {
         const links = data.links.concat({
           source: linkInput.sourceInput,
           target: linkInput.destinationInput,
+          bandwidth,
+          delay,
+          loss,
         });
+        console.log(links);
         setData({ nodes: data.nodes, links: links });
       }
     } else {

@@ -164,7 +164,7 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
       setTimeout(() => {
         setShowLoading(false);
         setCount(1);
-      }, 20000);
+      }, 30000);
     }
     return (
       <Container style={{ height: "100vh" }}>
