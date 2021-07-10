@@ -4,6 +4,7 @@ import TopoBuilder from "./TopoBuilder";
 import TopoViewer from "./TopoViewer";
 import axios from "axios";
 import TitlePage from "./TitlePage";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import ParticleComponent from "./ParticleComponent";
 
 function App() {
@@ -12,9 +13,9 @@ function App() {
     links: [{ source: "node0", target: "node1" }],
   });
 
-  const [ViewTopo, setViewTopo] = useState(false);
+  const [ViewTopo, setViewTopo] = useState(true);
   const [ViewTitlePage, setViewTitlePage] = useState(true);
-  const [ViewLogin, setViewLogin] = useState(false);
+  const [ViewLogin, setViewLogin] = useState(true);
   const ViewLoginForm = () => {
     setViewTitlePage(false);
     setViewLogin(true);
@@ -98,12 +99,16 @@ function App() {
       window.alert(`${string} node does not exist`);
     }
   };
-  const handleLogin = () => {
+
+  const [authorized, setAuthorized] = useState(false);
+  const handleLogin = (history) => {
     axios
       .post("http://localhost:3001/persons", loginInput)
       .then((response) => {
         if (response.status === 200) {
           setViewBuilder(true);
+          setAuthorized(true);
+          history.push("/build");
         } else if (response.status === 204) {
           throw Error("User name or Password incorrect!");
         }
@@ -113,20 +118,21 @@ function App() {
       });
   };
 
-  const createTopology = () => {
+  const createTopology = (history) => {
     axios
       .post("http://localhost:3001/topology", data)
       .then(() => {
         console.log("Data send to backend");
         setViewBuilder(false);
         setViewTopo(true);
+        history.push("/view");
       })
       .catch((error) => {
         window.alert(error);
       });
   };
 
-  const [viewBuilder, setViewBuilder] = useState(false);
+  const [viewBuilder, setViewBuilder] = useState(true);
 
   return (
     <div
@@ -138,41 +144,57 @@ function App() {
       }}
     >
       <ParticleComponent />
-      <TitlePage
-        ViewTitlePage={ViewTitlePage}
-        ViewLoginForm={ViewLoginForm}
-      ></TitlePage>
 
-      <Login
-        loginInput={loginInput}
-        setLoginInput={setLoginInput}
-        handleLogin={handleLogin}
-        viewBuilder={viewBuilder}
-        setViewBuilder={setViewBuilder}
-        ViewTopo={ViewTopo}
-        ViewLogin={ViewLogin}
-      ></Login>
-      <TopoBuilder
-        data={data}
-        addNode={addNode}
-        addLink={addLink}
-        linkInput={linkInput}
-        setLinkInput={setLinkInput}
-        createTopology={createTopology}
-        myConfig={myConfig}
-        onClickLink={onClickLink}
-        onClickNode={onClickNode}
-        ViewTopo={ViewTopo}
-        viewBuilder={viewBuilder}
-        username={loginInput.username}
-      ></TopoBuilder>
-      <TopoViewer
-        data={data}
-        myConfig={myConfig}
-        onClickLink={onClickLink}
-        onClickNode={onClickNode}
-        ViewTopo={ViewTopo}
-      ></TopoViewer>
+      {/* ROUTE HANDLING */}
+      <BrowserRouter>
+        <Switch>
+          <Route path="/view">
+            <TopoViewer
+              data={data}
+              myConfig={myConfig}
+              onClickLink={onClickLink}
+              onClickNode={onClickNode}
+            ></TopoViewer>
+          </Route>
+          <Route path="/build">
+            {authorized ? (
+              <TopoBuilder
+                data={data}
+                addNode={addNode}
+                addLink={addLink}
+                linkInput={linkInput}
+                setLinkInput={setLinkInput}
+                createTopology={createTopology}
+                myConfig={myConfig}
+                onClickLink={onClickLink}
+                onClickNode={onClickNode}
+                ViewTopo={ViewTopo}
+                viewBuilder={viewBuilder}
+                username={loginInput.username}
+              ></TopoBuilder>
+            ) : (
+              <Redirect to="/login"></Redirect>
+            )}
+          </Route>
+          <Route path="/login">
+            <Login
+              loginInput={loginInput}
+              setLoginInput={setLoginInput}
+              handleLogin={handleLogin}
+              viewBuilder={viewBuilder}
+              setViewBuilder={setViewBuilder}
+              ViewTopo={ViewTopo}
+              ViewLogin={ViewLogin}
+            ></Login>
+          </Route>
+          <Route path="/">
+            <TitlePage
+              ViewTitlePage={ViewTitlePage}
+              ViewLoginForm={ViewLoginForm}
+            ></TitlePage>
+          </Route>
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 }

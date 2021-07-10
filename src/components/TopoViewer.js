@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import { ReactTerminal } from "react-terminal";
 
-const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
+const TopoViewer = ({ data, myConfig, onClickLink }) => {
   const [count, setCount] = useState(0);
   const [output, setOutput] = useState("");
 
@@ -159,101 +159,101 @@ const TopoViewer = ({ data, myConfig, onClickLink, ViewTopo }) => {
     );
   };
 
-  if (ViewTopo) {
-    if (count === 0) {
-      setTimeout(() => {
-        setShowLoading(false);
-        setCount(1);
-      }, 30000);
-    }
-    return (
-      <Container style={{ height: "100vh" }}>
-        {loadingOverlay()}
-        {modal()}
-        <h1 style={{ fontFamily: "Roboto" }}>Topology Viewer</h1>
-        <div
-          style={{
-            border: "2px solid white",
-            width: "100%",
-            height: "51vh",
-            backgroundColor: "white",
-          }}
-        >
-          <Row>
-            <Col>
-              <div
-                style={{
-                  border: "2px solid black",
-                  width: "100%",
-                  height: "50vh",
-                  backgroundColor: "white",
-                }}
-              >
-                <Graph
-                  id="graph-id" // id is mandatory
-                  data={data}
-                  config={myConfig}
-                  onClickNode={onClickNode}
-                  onClickLink={onClickLink}
-                />
-              </div>
-            </Col>
-          </Row>
-        </div>
-
-        <Container>
-          <Row className="mt-1" class="text-center">
-            <Col>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setShowTerminal(!showTerminal);
-                  setShowTable(false);
-                }}
-                block
-              >
-                Terminal
-              </Button>{" "}
-            </Col>
-            <Col>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setShowLoading(true);
-                  axios.get("http://localhost:3001/start");
-                  setTimeout(() => {
-                    setShowLoading(false);
-                  }, 20000);
-                }}
-                block
-              >
-                Start NDN Stack
-              </Button>{" "}
-            </Col>
-            <Col>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setShowLoading(true);
-                  axios.get("http://localhost:3001/stop");
-                  setTimeout(() => {
-                    setShowLoading(false);
-                  }, 2000);
-                }}
-                block
-              >
-                Stop NDN Stack
-              </Button>{" "}
-            </Col>
-          </Row>
-          {table()}
-        </Container>
-        {terminal()}
-      </Container>
-    );
-  } else {
-    return null;
+  // if (ViewTopo) {
+  if (count === 0) {
+    setTimeout(() => {
+      setShowLoading(false);
+      setCount(1);
+    }, 30000);
   }
+  return (
+    <Container style={{ height: "100vh" }}>
+      {loadingOverlay()}
+      {modal()}
+      <h1 style={{ fontFamily: "Roboto" }}>Topology Viewer</h1>
+      <div
+        style={{
+          border: "2px solid white",
+          width: "100%",
+          height: "51vh",
+          backgroundColor: "white",
+        }}
+      >
+        <Row>
+          <Col>
+            <div
+              style={{
+                border: "2px solid black",
+                width: "100%",
+                height: "50vh",
+                backgroundColor: "white",
+              }}
+            >
+              <Graph
+                id="graph-id" // id is mandatory
+                data={data}
+                config={myConfig}
+                onClickNode={onClickNode}
+                onClickLink={onClickLink}
+              />
+            </div>
+          </Col>
+        </Row>
+      </div>
+
+      <Container>
+        <Row className="mt-1" class="text-center">
+          <Col>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowTerminal(!showTerminal);
+                setShowTable(false);
+              }}
+              block
+            >
+              Terminal
+            </Button>{" "}
+          </Col>
+          <Col>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowLoading(true);
+                axios.get("http://localhost:3001/start");
+                setTimeout(() => {
+                  setShowLoading(false);
+                }, 20000);
+              }}
+              block
+            >
+              Start NDN Stack
+            </Button>{" "}
+          </Col>
+          <Col>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowLoading(true);
+                axios.get("http://localhost:3001/stop");
+                setTimeout(() => {
+                  setShowLoading(false);
+                }, 2000);
+              }}
+              block
+            >
+              Stop NDN Stack
+            </Button>{" "}
+          </Col>
+        </Row>
+        {table()}
+      </Container>
+      {terminal()}
+    </Container>
+  );
+  // } else {
+  //   return null;
+  // }
 };
 
 export default TopoViewer;
