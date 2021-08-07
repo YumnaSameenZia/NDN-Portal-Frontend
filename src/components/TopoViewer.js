@@ -167,7 +167,7 @@ const TopoViewer = ({ data, myConfig, onClickLink }) => {
     }, 30000);
   }
   return (
-    <Container style={{ height: "100vh" }}>
+    <Container style={{ minHeight: "100vh" }}>
       {loadingOverlay()}
       {modal()}
       <h1 style={{ fontFamily: "Roboto" }}>Topology Viewer</h1>
@@ -251,9 +251,6 @@ const TopoViewer = ({ data, myConfig, onClickLink }) => {
       {terminal()}
     </Container>
   );
-  // } else {
-  //   return null;
-  // }
 };
 
 export default TopoViewer;

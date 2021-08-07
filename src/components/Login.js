@@ -1,19 +1,34 @@
-import { React, useState } from "react";
 import axios from "axios";
+import { React, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Container, Button, Alert, Row, Form, Col } from "react-bootstrap";
+import { Container, Button, Row, Form, Col } from "react-bootstrap";
 
-const Login = ({
-  loginInput,
-  setLoginInput,
-  handleLogin,
-  viewBuilder,
-  SetViewBuilder,
-  ViewTopo,
-  ViewLogin,
-}) => {
+const Login = ({ setAuthorized }) => {
   const history = useHistory();
-  // if (viewBuilder === false && ViewTopo === false && ViewLogin === true) {
+
+  // Control the state of input fields
+  const [loginInput, setLoginInput] = useState({
+    username: "",
+    password: "",
+  });
+
+  // HANDLE LOGIN
+  // Send the login details to nodejs server if login is verified go to build topology otherwise show error
+  const handleLogin = (history) => {
+    axios
+      .post("http://localhost:3001/persons", loginInput)
+      .then((response) => {
+        if (response.status === 200) {
+          setAuthorized(true);
+          history.push("/build");
+        } else if (response.status === 204) {
+          throw Error("User name or Password incorrect!");
+        }
+      })
+      .catch((error) => {
+        window.alert(error);
+      });
+  };
   return (
     <div
       style={{
@@ -21,19 +36,9 @@ const Login = ({
         alignItems: "center",
         width: "100%",
         height: "100vh",
-        // backgroundColor: "#85FFBD",
-        // backgroundImage: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
-        // background: "#36D1DC" /* fallback for old browsers */,
-        // background:
-        //   "-webkit-linear-gradient(to right, #5B86E5, #36D1DC)" /* Chrome 10-25, Safari 5.1-6 */,
-        // background:
-        //   "linear-gradient(to right, #5B86E5, #36D1DC)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
       }}
     >
       <Container>
-        {/* <h1 className="text-center" style={{ fontFamily: "Roboto" }}>
-            NAME DATA NETWORKING(NDN) PORTAL
-          </h1> */}
         <div style={{ border: "2px solid black", padding: "5px" }}>
           <Row className="justify-content-center">
             <h1 style={{ fontFamily: "Roboto" }}>Login</h1>
@@ -79,7 +84,6 @@ const Login = ({
                   <Button
                     variant="primary"
                     onClick={() => {
-                      console.log(history);
                       handleLogin(history);
                     }}
                   >
@@ -93,9 +97,6 @@ const Login = ({
       </Container>
     </div>
   );
-  // } else {
-  //   return null;
-  // }
 };
 
 export default Login;

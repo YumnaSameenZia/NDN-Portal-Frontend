@@ -1,354 +1,305 @@
-import React, { useState } from "react";
+import ModalForm from "./ModalForm";
+import NodeTypes from "./NodeTypes";
 import { Graph } from "react-d3-graph";
-import { useHistory } from "react-router-dom";
-import {
-  Container,
-  Button,
-  Alert,
-  Row,
-  Col,
-  InputGroup,
-  FormControl,
-  Modal,
-} from "react-bootstrap";
+import { React, useState, useEffect } from "react";
+import { Row, Col, Button, Container, Toast } from "react-bootstrap";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Notification from "./Notification";
 
 const TopoBuilder = ({
-  data,
-  addNode,
-  addLink,
-  linkInput,
-  setLinkInput,
-  createTopology,
-  myConfig,
+  topoData,
+  setTopoData,
+  graphConfig,
   onClickLink,
-  onClickNode,
-  ViewTopo,
-  viewBuilder,
-  username,
+  createTopology,
 }) => {
-  const history = useHistory();
-  const [makeTopo, setMakeTopo] = useState(false);
-  const [showAlert, setShowAlert] = useState(true);
-
-  const alertMessage = () => {
-    if (showAlert) {
-      return (
-        <Alert
-          variant="success"
-          onClose={() => setShowAlert(false)}
-          dismissible
-          transition
-        >
-          Welcome {username}!
-        </Alert>
-      );
+  const [showNodeModel, setShowNodeModel] = useState(false);
+  const [nodeConfig, setNodeConfig] = useState({
+    memory: "",
+    cache: "",
+    radius: "",
+    angle: "",
+    cpu: "",
+  });
+  const [nodesNum, setNodesNum] = useState(topoData.nodes.length);
+  const [nodeCordinates, setNodeCordinates] = useState({ x: 200, y: 200 });
+  const addNode = (multiplier, nodeType) => {
+    if (nodeType !== "Custom Node") {
+      setNodeConfig({
+        memory: 1024 * multiplier,
+        cache: 512 * multiplier,
+        angle: 0.0,
+        radius: 0.0,
+        cpu: 10 * multiplier,
+      });
+    }
+    setNodesNum(nodesNum + 1);
+    const nodes = topoData.nodes.concat({
+      id: `node${nodesNum}`,
+      x: nodeCordinates.x,
+      y: nodeCordinates.y,
+      memory: nodeConfig.memory,
+      radius: nodeConfig.radius,
+      cache: nodeConfig.cache,
+      angle: nodeConfig.angle,
+      cpu: nodeConfig.cpu / 100,
+    });
+    setTopoData({ nodes: nodes, links: topoData.links });
+    setNodeCordinates({ x: nodeCordinates.x + 5, y: nodeCordinates.y + 10 });
+  };
+  const handleNodeInputChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    var valid = false;
+    switch (name) {
+      case "memory":
+        valid = value > 0 && value <= 1024 * 1024 ? true : false;
+        break;
+      case "radius":
+        valid = value >= 0 && value <= 1.0 ? true : false;
+        break;
+      case "cache":
+        valid = value > 0 && value <= 1024 * 100 ? true : false;
+        break;
+      case "angle":
+        valid = value >= 0 && value <= 360 ? true : false;
+        break;
+      case "cpu":
+        valid = value > 0 && value <= 100 ? true : false;
+        break;
+    }
+    if (!valid) {
+      window.alert(`Invalid ${name} value, please enter correct value.`);
+      setNodeConfig({
+        ...nodeConfig,
+        [name]: "",
+      });
     } else {
-      return null;
+      setNodeConfig({
+        ...nodeConfig,
+        [event.target.name]: event.target.value,
+      });
     }
   };
 
-  /*
-    ADD NODE MODAL STATES AND FUNCTION 
-  */
+  const nodeModalFields = [
+    {
+      name: "memory",
+      title: "Memory",
+      placeHolder: "in KB's",
+      inputValue: nodeConfig.memory,
+      changeHandler: handleNodeInputChange,
+    },
+    {
+      name: "cache",
+      title: "Cache",
+      placeHolder: "in KB's",
+      inputValue: nodeConfig.cache,
+      changeHandler: handleNodeInputChange,
+    },
+    {
+      name: "radius",
+      title: "Radius",
+      placeHolder: "<0.0-1.0>",
+      inputValue: nodeConfig.radius,
+      changeHandler: handleNodeInputChange,
+    },
+    {
+      name: "angle",
+      title: "Angle",
+      placeHolder: "<0-360>",
+      inputValue: nodeConfig.angle,
+      changeHandler: handleNodeInputChange,
+    },
+    {
+      name: "cpu",
+      title: "CPU",
+      placeHolder: "<0-100%>",
+      inputValue: nodeConfig.cpu,
+      changeHandler: handleNodeInputChange,
+    },
+  ];
 
-  const [showNodeModal, setShowNodeModal] = useState(false);
-  const [memory, setMemory] = useState("");
-  const [radius, setRadius] = useState("");
-  const [cache, setCache] = useState("");
-  const [angle, setAngle] = useState("");
-  const [cpu, setCpu] = useState("");
-
-  const nodeModal = () => {
-    return (
-      <Modal
-        show={showNodeModal}
-        onHide={() => setShowNodeModal(false)}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Add Node</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {/* MEMORY INPUT */}
-          <InputGroup className="mb-3">
-            <InputGroup.Text>Memory</InputGroup.Text>
-            <FormControl
-              placeholder="in KB's"
-              value={memory}
-              onChange={(event) => {
-                setMemory(event.target.value);
-              }}
-            />
-          </InputGroup>
-          {/* RADIUS INPUT */}
-          <InputGroup className="mb-3">
-            <InputGroup.Text>Radius</InputGroup.Text>
-            <FormControl
-              placeholder="<0.0-1.0>"
-              value={radius}
-              onChange={(event) => {
-                setRadius(event.target.value);
-              }}
-            />
-          </InputGroup>
-          {/* CACHE INPUT */}
-          <InputGroup className="mb-3">
-            <InputGroup.Text>Cache</InputGroup.Text>
-            <FormControl
-              placeholder="in KB's"
-              value={cache}
-              onChange={(event) => {
-                setCache(event.target.value);
-              }}
-            />
-          </InputGroup>
-          {/* ANGLE INPUT */}
-          <InputGroup className="mb-3">
-            <InputGroup.Text>Angle</InputGroup.Text>
-            <FormControl
-              placeholder="<0-360>"
-              value={angle}
-              onChange={(event) => {
-                setAngle(event.target.value);
-              }}
-            />
-          </InputGroup>
-          {/* CPU INPUT */}
-          <InputGroup className="mb-3">
-            <InputGroup.Text>CPU</InputGroup.Text>
-            <FormControl
-              placeholder="<0.0-1.0>"
-              value={cpu}
-              onChange={(event) => {
-                setCpu(event.target.value);
-              }}
-            />
-          </InputGroup>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowNodeModal(false)}>
-            Close
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              addNode(memory, radius, cache, angle, cpu);
-              setShowNodeModal(false);
-              setAngle("");
-              setCache("");
-              setCpu("");
-              setMemory("");
-              setRadius("");
-            }}
-          >
-            Add Node
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  };
-
-  /*
-    ADD LINK MODAL STATES AND FUNCTION 
-  */
-
-  const [showLinkModal, setShowLinkModal] = useState(false);
-  const [bandwidth, setBandwidth] = useState("");
-  const [delay, setDelay] = useState("");
-  const [loss, setLoss] = useState("");
-
-  const linkModal = () => {
-    return (
-      <Modal
-        show={showLinkModal}
-        onHide={() => setShowLinkModal(false)}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Add Link</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {/* MEMORY INPUT */}
-          <InputGroup className="mb-3">
-            <InputGroup.Text>Bandwidth</InputGroup.Text>
-            <FormControl
-              placeholder="1-1000 Mbps"
-              value={bandwidth}
-              onChange={(event) => {
-                setBandwidth(event.target.value);
-              }}
-            />
-          </InputGroup>
-          {/* RADIUS INPUT */}
-          <InputGroup className="mb-3">
-            <InputGroup.Text>Delay</InputGroup.Text>
-            <FormControl
-              placeholder="0-1000ms"
-              value={delay}
-              onChange={(event) => {
-                setDelay(event.target.value);
-              }}
-            />
-          </InputGroup>
-          {/* CACHE INPUT */}
-          <InputGroup className="mb-3">
-            <InputGroup.Text>Loss</InputGroup.Text>
-            <FormControl
-              placeholder="in KB's"
-              value={loss}
-              onChange={(event) => {
-                setLoss(event.target.value);
-              }}
-            />
-          </InputGroup>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowLinkModal(false)}>
-            Close
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              addLink(bandwidth, delay, loss);
-              setShowNodeModal(false);
-              setBandwidth("");
-              setDelay("");
-              setLoss("");
-            }}
-          >
-            Add Link
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  };
-  /************************************************************************************/
-
-  /*
-    ADD LINK STATES AND FUNCTIONS
-   */
-
-  if (viewBuilder === true) {
-    return (
-      <Container>
-        {alertMessage()}
-        {nodeModal()}
-        {linkModal()}
-        <h1 style={{ fontFamily: "Roboto", paddingTop: "20px" }}>TOPOLOGY</h1>
-        <Row style={makeTopo ? {} : { height: "85vh" }}>
-          <Col>
-            <Button
-              variant="secondary"
-              block
-              onClick={() => setMakeTopo(true)}
-              data-testid="create-topology-button"
-            >
-              Create Topology
-            </Button>{" "}
-          </Col>
-          <Col>
-            <Button
-              variant="secondary"
-              block
-              onClick={() => createTopology(history)}
-              data-testid="view-topology-button"
-            >
-              View Topology
-            </Button>{" "}
-          </Col>
-        </Row>
-        <br></br>
-        <Row className={makeTopo ? "" : "d-none"}>
-          <Col className="justify-content-right">
-            <br></br>
-            <br></br>
-            <br></br>
-            <Button
-              variant="secondary"
-              onClick={() => setShowNodeModal(true)}
-              block
-            >
-              Add Node
-            </Button>{" "}
-            <br></br>
-            <InputGroup className="">
-              <FormControl
-                aria-label="Source Node"
-                aria-describedby="basic-addon1"
-                value={linkInput.sourceInput}
-                placeholder="Source Node"
-                onChange={(event) => {
-                  setLinkInput({
-                    sourceInput: event.target.value,
-                    destinationInput: linkInput.destinationInput,
-                  });
-                }}
-              />
-            </InputGroup>
-            <InputGroup className="mb-1">
-              <FormControl
-                aria-label="Destination Node"
-                aria-describedby="basic-addon1"
-                value={linkInput.destinationInput}
-                placeholder="Destination Node"
-                onChange={(event) => {
-                  setLinkInput({
-                    destinationInput: event.target.value,
-                    sourceInput: linkInput.sourceInput,
-                  });
-                }}
-              />
-            </InputGroup>
-            <Button
-              variant="secondary"
-              onClick={() => setShowLinkModal(true)}
-              block
-            >
-              Add Link
-            </Button>{" "}
-            <br></br>
-            <br></br>
-            <br></br>
-            <Button
-              variant="secondary"
-              onClick={() => createTopology(history)}
-              block
-            >
-              Submit
-            </Button>{" "}
-            {/* <Button variant="secondary" block>
-              Delete
-            </Button>
-            <Button variant="secondary" block>
-              Go Back
-            </Button>{" "} */}
-          </Col>
-          <Col>
-            <div
-              style={{
-                border: "2px solid black",
-                width: "100%",
-                height: "80vh",
-                backgroundColor: "white",
-              }}
-            >
-              <Graph
-                id="graph-id" // id is mandatory
-                data={data}
-                config={myConfig}
-                onClickNode={onClickNode}
-                onClickLink={onClickLink}
-              />
-            </div>
-          </Col>
-        </Row>
-      </Container>
-    );
-  } else {
-    return null;
+  {
+    /************************************************************************/
   }
+  {
+    /* CONFIGURATION TO ADD LINK */
+  }
+  const [link, setLink] = useState({ source: "", target: "" });
+  useEffect(() => {
+    if (link.source === "" && link.target !== "") {
+      setLinkToast({
+        message: "Set Source Node",
+      });
+      setShowNotification(true);
+    } else if (link.target === "" && link.source !== "") {
+      setLinkToast({
+        message: "Set Target Node",
+      });
+      setShowNotification(true);
+    } else if (
+      link.source === link.target &&
+      link.source !== "" &&
+      link.target !== ""
+    ) {
+      setLinkToast({
+        message: "Source and Target Node cannot be same",
+      });
+      setShowNotification(true);
+    } else if (
+      link.source !== "" &&
+      link.target !== "" &&
+      link.source !== link.target
+    ) {
+      setLinkToast({
+        message: "Adding Link",
+      });
+      var temp = topoData.links;
+      temp.push(link);
+      setTopoData({
+        ...topoData,
+        links: temp,
+      });
+      setLink({
+        source: "",
+        target: "",
+      });
+      setShowNotification(false);
+    }
+  }, [link]);
+  const [nodeClicked, setNodeClicked] = useState("");
+  const [showOption, setShowOption] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
+  const [showNotification, setShowNotification] = useState(false);
+  const [linkToast, setLinkToast] = useState({
+    duration: 0,
+    message: "",
+  });
+
+  const onRightClickNode = (event, nodeId) => {
+    event.preventDefault();
+    setShowOption(true);
+    setNodeClicked(nodeId);
+  };
+  const addSource = () => {
+    setLink({
+      ...link,
+      source: nodeClicked,
+    });
+    setShowOption(false);
+  };
+
+  const addDestination = () => {
+    setLink({
+      ...link,
+      target: nodeClicked,
+    });
+    setShowOption(false);
+  };
+  {
+    /************************************************************************/
+  }
+  return (
+    <Container
+      className="text-center"
+      style={{ minHeight: "100vh", backgroundColor: "black" }}
+    >
+      {/************************************************************************/}
+      {/* MAIN HEADING */}
+      <h1 style={{ fontFamily: "Roboto" }}>
+        <span>
+          <FontAwesomeIcon icon={faHome}></FontAwesomeIcon>{" "}
+        </span>
+        Build Topology
+      </h1>
+      {/************************************************************************/}
+      {/************************************************************************/}
+      {/* GRAPH COMPONENT */}
+      <Row>
+        <Col style={{ backgroundColor: "white" }}>
+          <Graph
+            id="graph-id"
+            data={topoData}
+            config={graphConfig}
+            onRightClickNode={onRightClickNode}
+            onClickLink={onClickLink}
+          ></Graph>
+        </Col>
+      </Row>
+      {/************************************************************************/}
+      {/************************************************************************/}
+      {/* GENERATE BUTTONS */}
+      <Row>
+        <Col style={{ padding: "0px" }}>
+          <NodeTypes
+            addNode={addNode}
+            setNodeConfig={setNodeConfig}
+            setShowNodeModal={setShowNodeModel}
+          ></NodeTypes>
+        </Col>
+      </Row>
+      {/************************************************************************/}
+      {/************************************************************************/}
+      {/* Buttons */}
+      <Row style={{ marginTop: "5px" }}>
+        <Col>
+          <Button variant="dark" onClick={() => setShowInstructions(true)}>
+            Instructions
+          </Button>
+        </Col>
+        <Col>
+          <Button variant="dark">Submit</Button>
+        </Col>
+      </Row>
+      {/************************************************************************/}
+      {/************************************************************************/}
+      {/* NODE MODAL */}
+      <ModalForm
+        title="Add Node"
+        config={nodeConfig}
+        fields={nodeModalFields}
+        showModal={showNodeModel}
+        setShowModal={setShowNodeModel}
+        submitHandler={addNode}
+      />
+      {/************************************************************************/}
+      {/************************************************************************/}
+      {/* NOTIFCATIONS */}
+      <div style={{ position: "fixed", top: "0px", right: "14px" }}>
+        <Notification
+          title="Instructions"
+          show={showInstructions}
+          setShow={setShowInstructions}
+          message="Right click between 2 nodes consecutively to add link!"
+        />
+        <Notification
+          title="Adding Link"
+          show={showNotification}
+          setShow={setShowNotification}
+          message={linkToast.message}
+        />
+        <Toast show={showOption} onClose={() => setShowOption(false)}>
+          <Toast.Header>
+            <strong className="me-auto block">Link Options</strong>
+          </Toast.Header>
+          <Toast.Body className="text-left text-white bg-dark">
+            Select the node as link source or destination
+            <hr></hr>
+            <div className="d-flex" style={{ justifyContent: "space-around" }}>
+              <Button variant="secondary" onClick={addSource}>
+                Source
+              </Button>
+              <Button variant="secondary" onClick={addDestination}>
+                Destination
+              </Button>
+            </div>
+          </Toast.Body>
+        </Toast>
+      </div>
+    </Container>
+  );
 };
 
 export default TopoBuilder;
