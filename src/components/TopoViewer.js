@@ -10,7 +10,7 @@ import {
   Modal,
   ProgressBar,
 } from "react-bootstrap";
-import { ReactTerminal } from "react-terminal";
+import Terminal from "./Terminal";
 
 const TopoViewer = ({ data, myConfig, onClickLink }) => {
   const [count, setCount] = useState(0);
@@ -19,18 +19,10 @@ const TopoViewer = ({ data, myConfig, onClickLink }) => {
   /* TERMINAL RELATED METHODS AND STATES */
 
   const [showTerminal, setShowTerminal] = useState(false);
-  const commands = {
-    whoami: "A speck of dust in grand cosmos",
-    net: () => onClickCmd(`net run`),
-    iperf: () => onClickCmd(`iperf`),
-  };
+
   const terminal = () => {
     if (showTerminal) {
-      return (
-        <div style={{ position: "relative", marginTop: "5px" }}>
-          <ReactTerminal commands={commands} />
-        </div>
-      );
+      return <Terminal onClickCmd={onClickCmd} />;
     } else {
       return (
         <Form style={{ marginTop: "5px", position: "relative" }}>

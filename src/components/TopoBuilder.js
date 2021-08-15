@@ -6,6 +6,7 @@ import { Row, Col, Button, Container, Toast } from "react-bootstrap";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Notification from "./Notification";
+import { useHistory } from "react-router-dom";
 
 const TopoBuilder = ({
   topoData,
@@ -14,6 +15,7 @@ const TopoBuilder = ({
   onClickLink,
   createTopology,
 }) => {
+  const history = useHistory();
   const [showNodeModel, setShowNodeModel] = useState(false);
   const [nodeConfig, setNodeConfig] = useState({
     memory: "",
@@ -23,7 +25,10 @@ const TopoBuilder = ({
     cpu: "",
   });
   const [nodesNum, setNodesNum] = useState(topoData.nodes.length);
-  const [nodeCordinates, setNodeCordinates] = useState({ x: 200, y: 200 });
+  const [nodeCordinates, setNodeCordinates] = useState({
+    x: Math.random() * 200,
+    y: Math.random() * 200,
+  });
   const addNode = (multiplier, nodeType) => {
     if (nodeType !== "Custom Node") {
       setNodeConfig({
@@ -46,7 +51,7 @@ const TopoBuilder = ({
       cpu: nodeConfig.cpu / 100,
     });
     setTopoData({ nodes: nodes, links: topoData.links });
-    setNodeCordinates({ x: nodeCordinates.x + 5, y: nodeCordinates.y + 10 });
+    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
   };
   const handleNodeInputChange = (event) => {
     const name = event.target.name;
@@ -201,6 +206,61 @@ const TopoBuilder = ({
   {
     /************************************************************************/
   }
+  {
+    // INSTRUCTIONS
+  }
+  const instructions = [
+    "(1) Right click on node to add Link.",
+    "(2) Click on Node to delete it.",
+  ];
+  const buildInstructions = instructions.map((instruction) => {
+    return <p>{instruction}</p>;
+  });
+  {
+    /************************************************************************/
+  }
+  {
+    // DELETING NODES
+  }
+  const [nodeOptions, setNodeOptions] = useState(false);
+
+  const onClickNode = (nodeId) => {
+    setNodeOptions(true);
+    setNodeClicked(nodeId);
+  };
+
+  const deleteNode = () => {
+    //   //also need to remove the links too
+    //   var tempLinks = topoData.links;
+    //   tempLinks = tempLinks.filter(
+    //     (link) => link.source !== nodeClicked || link.target !== nodeClicked
+    //   );
+    //   var temp = topoData.nodes;
+    //   temp = temp.filter((node) => node.id !== nodeClicked);
+    //   setTopoData({
+    //     links: tempLinks,
+    //     nodes: temp,
+    //   });
+    var links = topoData.links;
+    var nodes = topoData.nodes;
+
+    links = links.filter(
+      (link) => link.source !== nodeClicked && link.target !== nodeClicked
+    );
+    nodes = nodes.filter((node) => node.id !== nodeClicked);
+
+    setTopoData({
+      nodes: nodes,
+      links: links,
+    });
+
+    setNodeOptions(false);
+    console.log("Deleted Node!");
+  };
+
+  {
+    /************************************************************************/
+  }
   return (
     <Container
       className="text-center"
@@ -224,6 +284,7 @@ const TopoBuilder = ({
             data={topoData}
             config={graphConfig}
             onRightClickNode={onRightClickNode}
+            onClickNode={onClickNode}
             onClickLink={onClickLink}
           ></Graph>
         </Col>
@@ -250,7 +311,9 @@ const TopoBuilder = ({
           </Button>
         </Col>
         <Col>
-          <Button variant="dark">Submit</Button>
+          <Button variant="dark" onClick={() => createTopology(history)}>
+            Submit
+          </Button>
         </Col>
       </Row>
       {/************************************************************************/}
@@ -266,20 +329,26 @@ const TopoBuilder = ({
       />
       {/************************************************************************/}
       {/************************************************************************/}
-      {/* NOTIFCATIONS */}
+      {/* INSTRUCTIONS */}
       <div style={{ position: "fixed", top: "0px", right: "14px" }}>
         <Notification
           title="Instructions"
           show={showInstructions}
           setShow={setShowInstructions}
-          message="Right click between 2 nodes consecutively to add link!"
+          message={buildInstructions}
         />
+        {/************************************************************************/}
+        {/************************************************************************/}
+        {/* NOTIFICATION */}
         <Notification
           title="Adding Link"
           show={showNotification}
           setShow={setShowNotification}
           message={linkToast.message}
         />
+        {/************************************************************************/}
+        {/************************************************************************/}
+        {/* ADD LINK */}
         <Toast show={showOption} onClose={() => setShowOption(false)}>
           <Toast.Header>
             <strong className="me-auto block">Link Options</strong>
@@ -293,6 +362,21 @@ const TopoBuilder = ({
               </Button>
               <Button variant="secondary" onClick={addDestination}>
                 Destination
+              </Button>
+            </div>
+          </Toast.Body>
+        </Toast>
+        {/************************************************************************/}
+        {/************************************************************************/}
+        {/* DELETE NODE */}
+        <Toast show={nodeOptions} onClose={() => setNodeOptions(false)}>
+          <Toast.Header>
+            <strong className="me-auto block">Node Options</strong>
+          </Toast.Header>
+          <Toast.Body className="text-left text-white bg-dark">
+            <div className="d-flex" style={{ justifyContent: "space-around" }}>
+              <Button variant="secondary" onClick={deleteNode}>
+                Delete Node
               </Button>
             </div>
           </Toast.Body>

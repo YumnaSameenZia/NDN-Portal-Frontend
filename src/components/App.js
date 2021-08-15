@@ -4,10 +4,17 @@ import TopoBuilder from "./TopoBuilder";
 import TopoViewer from "./TopoViewer";
 import axios from "axios";
 import TitlePage from "./TitlePage";
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  Redirect,
+  useHistory,
+} from "react-router-dom";
 import ParticleComponent from "./ParticleComponent";
 
 function App() {
+  const history = useHistory();
   // TOPOLOGY CONFIGURATION
   const [data, setData] = useState({
     nodes: [
@@ -23,7 +30,7 @@ function App() {
     nodeHighlightBehavior: true,
     node: {
       color: "#42F3FB",
-      size: 120,
+      size: 250,
       highlightStrokeColor: "blue",
     },
     link: {
@@ -73,7 +80,7 @@ function App() {
             {authorized ? (
               <TopoViewer
                 data={data}
-                graphConfig={myConfig}
+                myConfig={myConfig}
                 onClickNode={onClickNode}
                 onClickLink={onClickLink}
               ></TopoViewer>
