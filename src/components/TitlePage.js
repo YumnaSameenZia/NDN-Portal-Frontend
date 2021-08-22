@@ -14,6 +14,11 @@ const TitlePage = () => {
           Login
         </Link>
       </div>
+      <div className="container">
+        <Link class="btn" to="/signup" style={{ textDecoration: "none" }}>
+          Sign Up
+        </Link>
+      </div>
     </div>
   );
 };

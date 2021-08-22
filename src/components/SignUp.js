@@ -1,34 +1,31 @@
 import axios from "axios";
 import { React, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { Container, Button, Row, Form, Col } from "react-bootstrap";
 
 const SignUp = ({ setAuthorized }) => {
-  const history = useHistory();
-
-  // Control the state of input fields
-  const [loginInput, setLoginInput] = useState({
+ 
+  const [user, setUser] = useState({
     username: "",
     password: "",
   });
 
-  // HANDLE LOGIN
-  // Send the login details to nodejs server if login is verified go to build topology otherwise show error
-  const handleLogin = (history) => {
+  const handleSignUp = () => {
+    console.log(user.username, user.password);
+    let newUser = { username: user.username, password: user.password };
+    // create a new json object and place it in the file
+    console.log(newUser);
+
+    // sending data to node js for adding in the user.json file
     axios
-      .post("http://localhost:3001/persons", loginInput)
+      .post("http://localhost:3001/signup", newUser)
       .then((response) => {
-        if (response.status === 200) {
-          setAuthorized(true);
-          history.push("/build");
-        } else if (response.status === 204) {
-          throw Error("User name or Password incorrect!");
-        }
+        alert("Added User");
       })
       .catch((error) => {
         window.alert(error);
       });
   };
+
   return (
     <div
       style={{
@@ -41,23 +38,23 @@ const SignUp = ({ setAuthorized }) => {
       <Container>
         <div style={{ border: "2px solid black", padding: "5px" }}>
           <Row className="justify-content-center">
-            <h1 style={{ fontFamily: "Roboto" }}>Login</h1>
+            <h1 style={{ fontFamily: "Roboto" }}>SignUp</h1>
           </Row>
           <Row className="justify-content-center">
             <Col xs="auto">
               <Form className="justify-content-center">
                 <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Username</Form.Label>
+                  <Form.Label>New Username</Form.Label>
                   <Form.Control
-                    data-testid="login-form-username"
-                    type="text"
-                    value={loginInput.username}
+                    value={user.username}
                     onChange={(event) => {
-                      setLoginInput({
+                      setUser({
                         username: event.target.value,
-                        password: loginInput.password,
+                        password: user.password,
                       });
                     }}
+                    data-testid="login-form-username"
+                    type="text"
                   />
                   <Form.Text className="text-muted">
                     Never share your username or password with anyone else.
@@ -65,27 +62,27 @@ const SignUp = ({ setAuthorized }) => {
                 </Form.Group>
 
                 <Form.Group controlId="formBasicPassword">
-                  <Form.Label>Password</Form.Label>
+                  <Form.Label>New Password</Form.Label>
                   <Form.Control
-                    data-testid="login-form-password"
-                    type="password"
-                    value={loginInput.password}
+                    value={user.password}
                     onChange={(event) => {
-                      setLoginInput({
-                        username: loginInput.username,
+                      setUser({
+                        username: user.username,
                         password: event.target.value,
                       });
                     }}
+                    data-testid="login-form-password"
+                    type="password"
                   />
                 </Form.Group>
                 <div className="text-center">
                   <Button
                     variant="primary"
                     onClick={() => {
-                      handleLogin(history);
+                      handleSignUp();
                     }}
                   >
-                    Submit
+                    Sign Up
                   </Button>
                 </div>
               </Form>
