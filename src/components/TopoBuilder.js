@@ -59,9 +59,9 @@ const TopoBuilder = ({
     setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
   };
 
-  // create a star topology
-  const createStarTopology = () => {
-    const star = {
+  // create a ring topology
+  const createRingTopology = () => {
+    const ring = {
       nodes: [
         { id: "node1", x: 100, y: 100 },
         { id: "node2", x: 200, y: 200 },
@@ -80,7 +80,7 @@ const TopoBuilder = ({
       ],
     };
 
-    setTopoData({ nodes: star.nodes, links: star.links });
+    setTopoData({ nodes: ring.nodes, links: ring.links });
     setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
   };
 
@@ -354,8 +354,8 @@ const TopoBuilder = ({
           </Button>
         </Col>
         <Col>
-          <Button variant="dark" onClick={() => createStarTopology()}>
-            Star Topology
+          <Button variant="dark" onClick={() => createRingTopology()}>
+            Ring Topology
           </Button>
         </Col>
       </Row>
