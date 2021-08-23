@@ -1,9 +1,14 @@
 import axios from "axios";
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Container, Button, Row, Form, Col } from "react-bootstrap";
 
 const SignUp = ({ setAuthorized }) => {
+  // changes <title> of the tab with respect to the page/components
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
+
   const history = useHistory();
 
   // Control the state of input fields

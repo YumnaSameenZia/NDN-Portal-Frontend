@@ -1,8 +1,15 @@
-import React from "react";
+import {React, useEffect} from "react";
 import { Link } from "react-router-dom";
 import "../styles/style.css";
 
 const TitlePage = () => {
+ 
+  // changes <title> of the tab with respect to the page/components
+  useEffect(() => {
+    document.title = "Itillah Portal"
+  }, [])
+
+
   return (
     <div className="TitlePage">
       <div id="particles-js"></div>

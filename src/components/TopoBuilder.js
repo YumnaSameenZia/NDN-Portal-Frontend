@@ -15,6 +15,11 @@ const TopoBuilder = ({
   onClickLink,
   createTopology,
 }) => {
+  // changes <title> of the tab with respect to the page/components
+  useEffect(() => {
+    document.title = "Topology Builder";
+  }, []);
+
   const history = useHistory();
   const [showNodeModel, setShowNodeModel] = useState(false);
   const [nodeConfig, setNodeConfig] = useState({
