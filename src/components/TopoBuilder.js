@@ -54,6 +54,7 @@ const TopoBuilder = ({
       cache: nodeConfig.cache,
       angle: nodeConfig.angle,
       cpu: nodeConfig.cpu / 100,
+
     });
     setTopoData({ nodes: nodes, links: topoData.links });
     setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
@@ -77,6 +78,8 @@ const TopoBuilder = ({
         break;
       case "cpu":
         valid = value > 0 && value <= 100 ? true : false;
+        break;
+      default:
         break;
     }
     if (!valid) {
