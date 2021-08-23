@@ -54,11 +54,36 @@ const TopoBuilder = ({
       cache: nodeConfig.cache,
       angle: nodeConfig.angle,
       cpu: nodeConfig.cpu / 100,
-
     });
     setTopoData({ nodes: nodes, links: topoData.links });
     setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
   };
+
+  // create a star topology
+  const createStarTopology = () => {
+    const star = {
+      nodes: [
+        { id: "node1", x: 100, y: 100 },
+        { id: "node2", x: 200, y: 200 },
+        { id: "node3", x: 300, y: 200 },
+        { id: "node4", x: 500, y: 200 },
+      ],
+      links: [
+        { source: "node1", target: "node4" },
+        { source: "node1", target: "node2" },
+        { source: "node2", target: "node1" },
+        { source: "node2", target: "node3" },
+        { source: "node3", target: "node4" },
+        { source: "node3", target: "node2" },
+        { source: "node4", target: "node1" },
+        { source: "node4", target: "node3" },
+      ],
+    };
+
+    setTopoData({ nodes: star.nodes, links: star.links });
+    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
+  };
+
   const handleNodeInputChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -321,6 +346,16 @@ const TopoBuilder = ({
         <Col>
           <Button variant="dark" onClick={() => createTopology(history)}>
             Submit
+          </Button>
+        </Col>
+        <Col>
+          <Button variant="dark" onClick={() => createTopology(history)}>
+            Bus Topology
+          </Button>
+        </Col>
+        <Col>
+          <Button variant="dark" onClick={() => createStarTopology()}>
+            Star Topology
           </Button>
         </Col>
       </Row>
