@@ -4,6 +4,8 @@ import TopoBuilder from "./TopoBuilder";
 import TopoViewer from "./TopoViewer";
 import axios from "axios";
 import TitlePage from "./TitlePage";
+import SignUp from "./SignUp";
+
 import {
   BrowserRouter,
   Switch,
@@ -106,6 +108,11 @@ function App() {
           <Route path="/login">
             <Login setAuthorized={setAuthorized}></Login>
           </Route>
+          {/* SIGN UP NEW USER */}
+          <Route path="/signup">
+            <SignUp />
+          </Route>
+
           <Route path="/">
             <TitlePage></TitlePage>
           </Route>
