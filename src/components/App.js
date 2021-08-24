@@ -5,7 +5,7 @@ import TopoViewer from "./TopoViewer";
 import axios from "axios";
 import TitlePage from "./TitlePage";
 import SignUp from "./SignUp";
-import Router from "../icons/router.svg"
+import Router from "../icons/router.svg";
 
 import {
   BrowserRouter,
@@ -33,12 +33,14 @@ function App() {
     nodeHighlightBehavior: true,
     node: {
       color: "#42F3FB",
-      size: 500,
-      highlightStrokeColor: "blue",
+      fontSize: 13,
+      size: 750,
       svg: Router,
+      highlightFontSize: 13,
     },
     link: {
-      highlightColor: "red",
+      color: "green",
+      highlightColor: "blue",
     },
   };
 

@@ -6,7 +6,8 @@ import { Row, Col, Button, Container, Toast } from "react-bootstrap";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Notification from "./Notification";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link} from "react-router-dom";
+
 
 const TopoBuilder = ({
   topoData,
@@ -79,6 +80,28 @@ const TopoBuilder = ({
     setTopoData({ nodes: sdn.nodes, links: sdn.links });
     setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
   };
+
+  // create bus topology
+  const createBusTopology = () => {
+    const bus = {
+      nodes: [
+        { id: "node1", x: 133, y: 192 },
+        { id: "node2", x: 224, y: 131 },
+        { id: "node3", x: 478, y: 359 },
+        { id: "node4", x: 323, y: 463 },
+        { id: "node5", x: 151, y: 104 },
+      ],
+      links: [
+        { source: "node1", target: "node2" },
+        { source: "node2", target: "node3" },
+        { source: "node3", target: "node4" },
+        { source: "node4", target: "node5" },
+      ],
+    };
+
+    setTopoData({ nodes: bus.nodes, links: bus.links });
+    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
+  }
 
   // create a star topology
   const createStarTopology = () => {
@@ -380,8 +403,31 @@ const TopoBuilder = ({
       </Row>
       {/************************************************************************/}
       {/************************************************************************/}
-      {/* Buttons */}
+      {/* prebuild topologies */}
+      <Row>
+        <h3 style={{marginLeft:"auto", marginRight:"auto", marginTop:"10px"}}>Prebuilt Topologies</h3>
+      </Row>
       <Row style={{ marginTop: "5px" }}>
+        <Col>
+          <Button variant="dark" onClick={() => createStarTopology(history)}>
+            Star Topology
+          </Button>
+        </Col>
+        <Col>
+          <Button variant="dark" onClick={() => createBusTopology(history)}>
+            Bus Topology
+          </Button>
+        </Col>
+        <Col>
+          <Button variant="dark" onClick={() => createRingTopology()}>
+            Ring Topology
+          </Button>
+        </Col>
+      </Row>
+      {/************************************************************************/}
+      {/************************************************************************/}
+      {/* Buttons */}
+      <Row style={{ marginTop: "25px" }}>
         <Col>
           <Button variant="dark" onClick={() => setShowInstructions(true)}>
             Instructions
@@ -390,16 +436,6 @@ const TopoBuilder = ({
         <Col>
           <Button variant="dark" onClick={() => createTopology(history)}>
             Submit
-          </Button>
-        </Col>
-        <Col>
-          <Button variant="dark" onClick={() => createStarTopology(history)}>
-            Star Topology
-          </Button>
-        </Col>
-        <Col>
-          <Button variant="dark" onClick={() => createRingTopology()}>
-            Ring Topology
           </Button>
         </Col>
       </Row>
