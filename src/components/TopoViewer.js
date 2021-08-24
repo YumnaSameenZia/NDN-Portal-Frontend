@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Graph } from "react-d3-graph";
 import axios from "axios";
 import {
@@ -13,6 +13,11 @@ import {
 import Terminal from "./Terminal";
 
 const TopoViewer = ({ data, myConfig, onClickLink }) => {
+  // changes <title> of the tab with respect to the page/components
+  useEffect(() => {
+    document.title = "Topology Viewer";
+  }, []);
+
   const [count, setCount] = useState(0);
   const [output, setOutput] = useState("");
 

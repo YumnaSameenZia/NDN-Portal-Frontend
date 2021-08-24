@@ -6,7 +6,8 @@ import { Row, Col, Button, Container, Toast } from "react-bootstrap";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Notification from "./Notification";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link} from "react-router-dom";
+
 
 const TopoBuilder = ({
   topoData,
@@ -15,6 +16,11 @@ const TopoBuilder = ({
   onClickLink,
   createTopology,
 }) => {
+  // changes <title> of the tab with respect to the page/components
+  useEffect(() => {
+    document.title = "Topology Builder";
+  }, []);
+
   const history = useHistory();
   const [showNodeModel, setShowNodeModel] = useState(false);
   const [nodeConfig, setNodeConfig] = useState({
@@ -53,6 +59,97 @@ const TopoBuilder = ({
     setTopoData({ nodes: nodes, links: topoData.links });
     setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
   };
+
+  // create a sdn topology
+  const createSdnTopology = () => {
+    const sdn = {
+      nodes: [
+        { id: "node1", x: 358, y: 190 },
+        { id: "node2", x: 314, y: 346 },
+        { id: "node3", x: 397, y: 493 },
+        { id: "node4", x: 178, y: 304 },
+        { id: "s", x: 211, y: 449 },
+      ],
+      links: [
+        { source: "s", target: "node1" },
+        { source: "s", target: "node2" },
+        { source: "s", target: "node3" },
+        { source: "s", target: "node4" },
+      ],
+    };
+    setTopoData({ nodes: sdn.nodes, links: sdn.links });
+    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
+  };
+
+  // create bus topology
+  const createBusTopology = () => {
+    const bus = {
+      nodes: [
+        { id: "node1", x: 133, y: 192 },
+        { id: "node2", x: 224, y: 131 },
+        { id: "node3", x: 478, y: 359 },
+        { id: "node4", x: 323, y: 463 },
+        { id: "node5", x: 151, y: 104 },
+      ],
+      links: [
+        { source: "node1", target: "node2" },
+        { source: "node2", target: "node3" },
+        { source: "node3", target: "node4" },
+        { source: "node4", target: "node5" },
+      ],
+    };
+
+    setTopoData({ nodes: bus.nodes, links: bus.links });
+    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
+  }
+
+  // create a star topology
+  const createStarTopology = () => {
+    const star = {
+      nodes: [
+        { id: "node1", x: 358, y: 190 },
+        { id: "node2", x: 314, y: 346 },
+        { id: "node3", x: 397, y: 493 },
+        { id: "node4", x: 178, y: 304 },
+        { id: "node5", x: 211, y: 449 },
+      ],
+      links: [
+        { source: "node5", target: "node1" },
+        { source: "node5", target: "node2" },
+        { source: "node5", target: "node3" },
+        { source: "node5", target: "node4" },
+      ],
+    };
+
+    setTopoData({ nodes: star.nodes, links: star.links });
+    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
+  };
+
+  // create a ring topology
+  const createRingTopology = () => {
+    const ring = {
+      nodes: [
+        { id: "node1", x: 100, y: 100 },
+        { id: "node2", x: 200, y: 200 },
+        { id: "node3", x: 300, y: 200 },
+        { id: "node4", x: 500, y: 200 },
+      ],
+      links: [
+        { source: "node1", target: "node4" },
+        { source: "node1", target: "node2" },
+        { source: "node2", target: "node1" },
+        { source: "node2", target: "node3" },
+        { source: "node3", target: "node4" },
+        { source: "node3", target: "node2" },
+        { source: "node4", target: "node1" },
+        { source: "node4", target: "node3" },
+      ],
+    };
+
+    setTopoData({ nodes: ring.nodes, links: ring.links });
+    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
+  };
+
   const handleNodeInputChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -72,6 +169,8 @@ const TopoBuilder = ({
         break;
       case "cpu":
         valid = value > 0 && value <= 100 ? true : false;
+        break;
+      default:
         break;
     }
     if (!valid) {
@@ -298,13 +397,37 @@ const TopoBuilder = ({
             addNode={addNode}
             setNodeConfig={setNodeConfig}
             setShowNodeModal={setShowNodeModel}
+            createSdnTopology={createSdnTopology}
           ></NodeTypes>
         </Col>
       </Row>
       {/************************************************************************/}
       {/************************************************************************/}
-      {/* Buttons */}
+      {/* prebuild topologies */}
+      <Row>
+        <h3 style={{marginLeft:"auto", marginRight:"auto", marginTop:"10px"}}>Prebuilt Topologies</h3>
+      </Row>
       <Row style={{ marginTop: "5px" }}>
+        <Col>
+          <Button variant="dark" onClick={() => createStarTopology(history)}>
+            Star Topology
+          </Button>
+        </Col>
+        <Col>
+          <Button variant="dark" onClick={() => createBusTopology(history)}>
+            Bus Topology
+          </Button>
+        </Col>
+        <Col>
+          <Button variant="dark" onClick={() => createRingTopology()}>
+            Ring Topology
+          </Button>
+        </Col>
+      </Row>
+      {/************************************************************************/}
+      {/************************************************************************/}
+      {/* Buttons */}
+      <Row style={{ marginTop: "25px" }}>
         <Col>
           <Button variant="dark" onClick={() => setShowInstructions(true)}>
             Instructions

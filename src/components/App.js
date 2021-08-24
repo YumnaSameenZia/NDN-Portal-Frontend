@@ -5,6 +5,7 @@ import TopoViewer from "./TopoViewer";
 import axios from "axios";
 import TitlePage from "./TitlePage";
 import SignUp from "./SignUp";
+import Router from "../icons/router.svg";
 
 import {
   BrowserRouter,
@@ -27,16 +28,19 @@ function App() {
   });
 
   // GRAPH MODULE CONFIGURATION
-
+  // changed 'size' property and changed node from circle to 'router.svg'
   const myConfig = {
     nodeHighlightBehavior: true,
     node: {
       color: "#42F3FB",
-      size: 250,
-      highlightStrokeColor: "blue",
+      fontSize: 13,
+      size: 750,
+      svg: Router,
+      highlightFontSize: 13,
     },
     link: {
-      highlightColor: "lightblue",
+      color: "green",
+      highlightColor: "blue",
     },
   };
 

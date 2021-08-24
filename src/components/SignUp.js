@@ -1,25 +1,32 @@
 import axios from "axios";
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Container, Button, Row, Form, Col } from "react-bootstrap";
+import {
+  Redirect,
+} from "react-router-dom";
 
 const SignUp = ({ setAuthorized }) => {
- 
+  // changes <title> of the tab with respect to the page/components
+  useEffect(() => {
+    document.title = "Sign Up";
+  }, []);
+
   const [user, setUser] = useState({
     username: "",
     password: "",
   });
 
   const handleSignUp = () => {
+    alert("New Added User");
     console.log(user.username, user.password);
     let newUser = { username: user.username, password: user.password };
     // create a new json object and place it in the file
     console.log(newUser);
-
     // sending data to node js for adding in the user.json file
     axios
       .post("http://localhost:3001/signup", newUser)
       .then((response) => {
-        alert("Added User");
+        // redirect to same page with empty text fields
       })
       .catch((error) => {
         window.alert(error);
@@ -38,7 +45,7 @@ const SignUp = ({ setAuthorized }) => {
       <Container>
         <div style={{ border: "2px solid black", padding: "5px" }}>
           <Row className="justify-content-center">
-            <h1 style={{ fontFamily: "Roboto" }}>SignUp</h1>
+            <h1 style={{ fontFamily: "Roboto" }}>Sign Up</h1>
           </Row>
           <Row className="justify-content-center">
             <Col xs="auto">
