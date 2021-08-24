@@ -80,6 +80,28 @@ const TopoBuilder = ({
     setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
   };
 
+  // create a star topology
+  const createStarTopology = () => {
+    const star = {
+      nodes: [
+        { id: "node1", x: 358, y: 190 },
+        { id: "node2", x: 314, y: 346 },
+        { id: "node3", x: 397, y: 493 },
+        { id: "node4", x: 178, y: 304 },
+        { id: "node5", x: 211, y: 449 },
+      ],
+      links: [
+        { source: "node5", target: "node1" },
+        { source: "node5", target: "node2" },
+        { source: "node5", target: "node3" },
+        { source: "node5", target: "node4" },
+      ],
+    };
+
+    setTopoData({ nodes: star.nodes, links: star.links });
+    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
+  };
+
   // create a ring topology
   const createRingTopology = () => {
     const ring = {
@@ -371,8 +393,8 @@ const TopoBuilder = ({
           </Button>
         </Col>
         <Col>
-          <Button variant="dark" onClick={() => createTopology(history)}>
-            Bus Topology
+          <Button variant="dark" onClick={() => createStarTopology(history)}>
+            Star Topology
           </Button>
         </Col>
         <Col>
