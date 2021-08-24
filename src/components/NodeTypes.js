@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import { faEthernet, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const NodeTypes = ({ addNode, setNodeConfig, setShowNodeModal }) => {
+const NodeTypes = ({ addNode, setNodeConfig, setShowNodeModal, createSdnTopology }) => {
   const nodeTypes = {
     "SDN Controller": 5,
     "Simple Node": 1,
@@ -29,7 +29,13 @@ const NodeTypes = ({ addNode, setNodeConfig, setShowNodeModal }) => {
                 });
                 setShowNodeModal(true);
               } else {
-                addNode(nodeTypes[property], property);
+
+                if (property === "SDN Controller") {
+                  // create a ready made sdn topology
+                  createSdnTopology()
+                } else {
+                  addNode(nodeTypes[property], property);
+                }
               }
             }}
           >

@@ -59,6 +59,27 @@ const TopoBuilder = ({
     setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
   };
 
+  // create a sdn topology
+  const createSdnTopology = () => {
+    const sdn = {
+      nodes: [
+        { id: "node1", x: 358, y: 190 },
+        { id: "node2", x: 314, y: 346 },
+        { id: "node3", x: 397, y: 493 },
+        { id: "node4", x: 178, y: 304 },
+        { id: "s", x: 211, y: 449 },
+      ],
+      links: [
+        { source: "s", target: "node1" },
+        { source: "s", target: "node2" },
+        { source: "s", target: "node3" },
+        { source: "s", target: "node4" },
+      ],
+    };
+    setTopoData({ nodes: sdn.nodes, links: sdn.links });
+    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
+  };
+
   // create a ring topology
   const createRingTopology = () => {
     const ring = {
@@ -331,6 +352,7 @@ const TopoBuilder = ({
             addNode={addNode}
             setNodeConfig={setNodeConfig}
             setShowNodeModal={setShowNodeModel}
+            createSdnTopology={createSdnTopology}
           ></NodeTypes>
         </Col>
       </Row>
