@@ -304,7 +304,8 @@ const TopoBuilder = ({
   }
   const instructions = [
     "(1) Right click on node to add Link.",
-    "(2) Click on Node to delete it.",
+    "(2) Double Click on Node to delete it.",
+    "(3) Zoom in & out using mouse scroll",
   ];
   const buildInstructions = instructions.map((instruction) => {
     return <p>{instruction}</p>;
@@ -370,8 +371,8 @@ const TopoBuilder = ({
           <GraphComponent
             setNodeOptions={setNodeOptions}
             setNodeClicked={setNodeClicked}
-            topoData={topoData}
-            graphConfig={graphConfig}
+            data={topoData}
+            myConfig={graphConfig}
             setShowOption={setShowOption}
           />
         </Col>

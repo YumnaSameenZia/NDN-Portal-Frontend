@@ -12,23 +12,16 @@ import {
   Switch,
   Route,
   Redirect,
-  useHistory,
 } from "react-router-dom";
 import ParticleComponent from "./ParticleComponent";
 
 function App() {
-  const history = useHistory();
   // TOPOLOGY CONFIGURATION
   const [data, setData] = useState({
-    nodes: [
-      {id: 'Harry'},
-      {id: 'Sally'},
-      {id: 'Alice'}
-    ],
+    nodes: [{ id: "node1" }, { id: "node2" }],
     links: [
-        {source: 'Harry', target: 'Sally'},
-        {source: 'Harry', target: 'Alice'},
-    ]
+      { source: "node1", target: "node2" },
+    ],
   });
 
   // GRAPH MODULE CONFIGURATION
@@ -36,16 +29,17 @@ function App() {
   const myConfig = {
     nodeHighlightBehavior: true,
     node: {
-      color: "#42F3FB",
-      highlightFontSize: 13,
-      highlightColor: "red"
+      color: `lightgreen`,
+      size: 700,
+      fontSize: 12,
+      highlightFontSize: 12,
+      highlightStrokeColor: `blue`,
+      svg: Router
     },
     link: {
-      color: "green",
-      highlightColor: "red",
+      highlightColor: `lightblue`,
     },
   };
-
 
   // LOGIN STATES AND FUNCTIONS
 
@@ -80,8 +74,8 @@ function App() {
           <Route path="/view">
             {authorized ? (
               <TopoViewer
-                data={data}
-                myConfig={myConfig}
+              // data={data}
+              // myConfig={myConfig}
               ></TopoViewer>
             ) : (
               <Redirect to="/login"></Redirect>
