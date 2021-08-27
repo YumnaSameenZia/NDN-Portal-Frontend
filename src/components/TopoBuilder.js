@@ -282,6 +282,32 @@ const TopoBuilder = ({
     message: "",
   });
 
+  // Callback to handle click on the graph.
+  // @param {Object} event click dom event
+  const onClickGraph = function (event) {
+    window.alert("Clicked the graph background");
+  };
+
+  const onDoubleClickNode = function (nodeId, node) {
+    window.alert(
+      "Double clicked node ${nodeId} in position (${node.x}, ${node.y})"
+    );
+  };
+
+  const onRightClickLink = function (event, source, target) {
+    window.alert("Right clicked link between ${source} and ${target}");
+  };
+
+  const onNodePositionChange = function (nodeId, x, y) {
+    window.alert(`Node ${nodeId} moved to new position x= ${x} y= ${y}`);
+  };
+
+  // Callback that's called whenever the graph is zoomed in/out
+  // @param {number} previousZoom the previous graph zoom
+  // @param {number} newZoom the new graph zoom
+  const onZoomChange = function (previousZoom, newZoom) {
+    window.alert(`Graph is now zoomed at ${newZoom} from ${previousZoom}`);
+  };
   const onRightClickNode = (event, nodeId) => {
     event.preventDefault();
     setShowOption(true);
@@ -405,7 +431,7 @@ const TopoBuilder = ({
       {/************************************************************************/}
       {/* prebuild topologies */}
       <Row>
-        <h3 style={{marginLeft:"auto", marginRight:"auto", marginTop:"10px"}}>Prebuilt Topologies</h3>
+        <h3 style={{marginLeft:"auto",marginRight:"auto",marginTop:"10px"}}>Prebuilt Topologies</h3>
       </Row>
       <Row style={{ marginTop: "5px" }}>
         <Col>
