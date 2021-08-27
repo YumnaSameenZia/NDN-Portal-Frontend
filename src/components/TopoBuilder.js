@@ -6,14 +6,13 @@ import { Row, Col, Button, Container, Toast } from "react-bootstrap";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Notification from "./Notification";
-import { useHistory, Link} from "react-router-dom";
-
+import { useHistory, Link } from "react-router-dom";
+import { GraphComponent } from "./GraphComponent";
 
 const TopoBuilder = ({
   topoData,
   setTopoData,
   graphConfig,
-  onClickLink,
   createTopology,
 }) => {
   // changes <title> of the tab with respect to the page/components
@@ -101,7 +100,7 @@ const TopoBuilder = ({
 
     setTopoData({ nodes: bus.nodes, links: bus.links });
     setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
-  }
+  };
 
   // create a star topology
   const createStarTopology = () => {
@@ -282,37 +281,6 @@ const TopoBuilder = ({
     message: "",
   });
 
-  // Callback to handle click on the graph.
-  // @param {Object} event click dom event
-  const onClickGraph = function (event) {
-    window.alert("Clicked the graph background");
-  };
-
-  const onDoubleClickNode = function (nodeId, node) {
-    window.alert(
-      "Double clicked node ${nodeId} in position (${node.x}, ${node.y})"
-    );
-  };
-
-  const onRightClickLink = function (event, source, target) {
-    window.alert("Right clicked link between ${source} and ${target}");
-  };
-
-  const onNodePositionChange = function (nodeId, x, y) {
-    window.alert(`Node ${nodeId} moved to new position x= ${x} y= ${y}`);
-  };
-
-  // Callback that's called whenever the graph is zoomed in/out
-  // @param {number} previousZoom the previous graph zoom
-  // @param {number} newZoom the new graph zoom
-  const onZoomChange = function (previousZoom, newZoom) {
-    window.alert(`Graph is now zoomed at ${newZoom} from ${previousZoom}`);
-  };
-  const onRightClickNode = (event, nodeId) => {
-    event.preventDefault();
-    setShowOption(true);
-    setNodeClicked(nodeId);
-  };
   const addSource = () => {
     setLink({
       ...link,
@@ -348,11 +316,6 @@ const TopoBuilder = ({
     // DELETING NODES
   }
   const [nodeOptions, setNodeOptions] = useState(false);
-
-  const onClickNode = (nodeId) => {
-    setNodeOptions(true);
-    setNodeClicked(nodeId);
-  };
 
   const deleteNode = () => {
     //   //also need to remove the links too
@@ -404,14 +367,13 @@ const TopoBuilder = ({
       {/* GRAPH COMPONENT */}
       <Row>
         <Col style={{ backgroundColor: "white" }}>
-          <Graph
-            id="graph-id"
-            data={topoData}
-            config={graphConfig}
-            onRightClickNode={onRightClickNode}
-            onClickNode={onClickNode}
-            onClickLink={onClickLink}
-          ></Graph>
+          <GraphComponent
+            setNodeOptions={setNodeOptions}
+            setNodeClicked={setNodeClicked}
+            topoData={topoData}
+            graphConfig={graphConfig}
+            setShowOption={setShowOption}
+          />
         </Col>
       </Row>
       {/************************************************************************/}
@@ -431,7 +393,11 @@ const TopoBuilder = ({
       {/************************************************************************/}
       {/* prebuild topologies */}
       <Row>
-        <h3 style={{marginLeft:"auto",marginRight:"auto",marginTop:"10px"}}>Prebuilt Topologies</h3>
+        <h3
+          style={{ marginLeft: "auto", marginRight: "auto", marginTop: "10px" }}
+        >
+          Prebuilt Topologies
+        </h3>
       </Row>
       <Row style={{ marginTop: "5px" }}>
         <Col>

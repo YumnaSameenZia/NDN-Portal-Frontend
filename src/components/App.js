@@ -21,10 +21,14 @@ function App() {
   // TOPOLOGY CONFIGURATION
   const [data, setData] = useState({
     nodes: [
-      { id: "node0", x: 100, y: 100 },
-      { id: "node1", x: 200, y: 200 },
+      {id: 'Harry'},
+      {id: 'Sally'},
+      {id: 'Alice'}
     ],
-    links: [{ source: "node0", target: "node1" }],
+    links: [
+        {source: 'Harry', target: 'Sally'},
+        {source: 'Harry', target: 'Alice'},
+    ]
   });
 
   // GRAPH MODULE CONFIGURATION
@@ -33,24 +37,15 @@ function App() {
     nodeHighlightBehavior: true,
     node: {
       color: "#42F3FB",
-      fontSize: 13,
-      size: 750,
-      svg: Router,
       highlightFontSize: 13,
+      highlightColor: "red"
     },
     link: {
       color: "green",
-      highlightColor: "blue",
+      highlightColor: "red",
     },
   };
 
-  const onClickNode = function (nodeId) {
-    window.alert(nodeId);
-  };
-
-  const onClickLink = function (source, target) {
-    window.alert(`Clicked link between ${source} and ${target}`);
-  };
 
   // LOGIN STATES AND FUNCTIONS
 
@@ -87,8 +82,6 @@ function App() {
               <TopoViewer
                 data={data}
                 myConfig={myConfig}
-                onClickNode={onClickNode}
-                onClickLink={onClickLink}
               ></TopoViewer>
             ) : (
               <Redirect to="/login"></Redirect>
@@ -102,8 +95,6 @@ function App() {
                 setTopoData={setData}
                 createTopology={createTopology}
                 graphConfig={myConfig}
-                onClickNode={onClickNode}
-                onClickLink={onClickLink}
               ></TopoBuilder>
             ) : (
               <Redirect to="/login"></Redirect>
