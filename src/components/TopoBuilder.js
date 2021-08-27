@@ -371,8 +371,8 @@ const TopoBuilder = ({
           <GraphComponent
             setNodeOptions={setNodeOptions}
             setNodeClicked={setNodeClicked}
-            data={topoData}
-            myConfig={graphConfig}
+            topoData={topoData}
+            graphConfig={graphConfig}
             setShowOption={setShowOption}
           />
         </Col>

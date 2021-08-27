@@ -5,18 +5,16 @@ export const GraphComponent = ({
   setNodeOptions,
   setNodeClicked,
   setShowOption,
-  data,
-  myConfig
-}) => {
+  topoData,
+  graphConfig,
+  onClickLink,
+  onClickNode,
 
+}) => {
 
   const onDoubleClickNode = function (nodeId, node) {
     setNodeOptions(true);
     setNodeClicked(nodeId);
-  };
-
-  const onClickLink = function (source, target) {
-    window.alert(`Clicked link between ${source} and ${target}`);
   };
 
   const onRightClickNode = (event, nodeId) => {
@@ -37,8 +35,9 @@ export const GraphComponent = ({
     <div>
       <Graph
         id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
-        data={data}
-        config={myConfig}
+        data={topoData}
+        onClickNode={onClickNode}
+        config={graphConfig}
         onDoubleClickNode={onDoubleClickNode}
         onRightClickNode={onRightClickNode}
         onClickLink={onClickLink}

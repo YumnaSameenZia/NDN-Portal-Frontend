@@ -74,8 +74,8 @@ function App() {
           <Route path="/view">
             {authorized ? (
               <TopoViewer
-              // data={data}
-              // myConfig={myConfig}
+              topoData={data}
+              graphConfig={myConfig}
               ></TopoViewer>
             ) : (
               <Redirect to="/login"></Redirect>
