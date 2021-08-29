@@ -1,12 +1,11 @@
 import ModalForm from "./ModalForm";
 import NodeTypes from "./NodeTypes";
-import { Graph } from "react-d3-graph";
 import { React, useState, useEffect } from "react";
 import { Row, Col, Button, Container, Toast } from "react-bootstrap";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Notification from "./Notification";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory} from "react-router-dom";
 import { GraphComponent } from "./GraphComponent";
 
 const TopoBuilder = ({
@@ -28,12 +27,16 @@ const TopoBuilder = ({
     radius: "",
     angle: "",
     cpu: "",
+    name: "",
   });
   const [nodesNum, setNodesNum] = useState(topoData.nodes.length);
+
   const [nodeCordinates, setNodeCordinates] = useState({
     x: Math.random() * 200,
     y: Math.random() * 200,
   });
+
+  // add node different from custom node
   const addNode = (multiplier, nodeType) => {
     if (nodeType !== "Custom Node") {
       setNodeConfig({
@@ -44,9 +47,26 @@ const TopoBuilder = ({
         cpu: 10 * multiplier,
       });
     }
+
     setNodesNum(nodesNum + 1);
     const nodes = topoData.nodes.concat({
       id: `node${nodesNum}`,
+      x: nodeCordinates.x,
+      y: nodeCordinates.y,
+      memory: nodeConfig.memory,
+      radius: nodeConfig.radius,
+      cache: nodeConfig.cache,
+      angle: nodeConfig.angle,
+      cpu: nodeConfig.cpu / 100,
+    });
+    setTopoData({ nodes: nodes, links: topoData.links });
+    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
+  };
+
+  // add a custom topology
+  const addCustomNode = (multiplier, nodeType) => {
+    const nodes = topoData.nodes.concat({
+      id: nodeConfig.name,
       x: nodeCordinates.x,
       y: nodeCordinates.y,
       memory: nodeConfig.memory,
@@ -169,6 +189,9 @@ const TopoBuilder = ({
       case "cpu":
         valid = value > 0 && value <= 100 ? true : false;
         break;
+      case "name":
+        valid = true;
+        break;
       default:
         break;
     }
@@ -186,7 +209,15 @@ const TopoBuilder = ({
     }
   };
 
+  console.log();
   const nodeModalFields = [
+    {
+      name: "name",
+      title: "Name",
+      placeHolder: "Enter Custom Node Name",
+      inputValue: nodeConfig.name,
+      changeHandler: handleNodeInputChange,
+    },
     {
       name: "memory",
       title: "Memory",
@@ -441,7 +472,7 @@ const TopoBuilder = ({
         fields={nodeModalFields}
         showModal={showNodeModel}
         setShowModal={setShowNodeModel}
-        submitHandler={addNode}
+        submitHandler={addCustomNode}
       />
       {/************************************************************************/}
       {/************************************************************************/}

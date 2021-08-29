@@ -12,6 +12,8 @@ export const GraphComponent = ({
 
 }) => {
 
+  const [currentZoom, setCurrentZoom] = useState(100);
+
   const onDoubleClickNode = function (nodeId, node) {
     setNodeOptions(true);
     setNodeClicked(nodeId);
@@ -29,10 +31,11 @@ export const GraphComponent = ({
 
   const onZoomChange = function (previousZoom, newZoom) {
     console.log(`Zoomed : ${previousZoom}, ${newZoom}`);
+    setCurrentZoom(Math.floor(newZoom * 100));
   };
 
   return (
-    <div>
+    <div style ={{width:"100%"}}>
       <Graph
         id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
         data={topoData}
@@ -44,6 +47,9 @@ export const GraphComponent = ({
         onNodePositionChange={onNodePositionChange}
         onZoomChange={onZoomChange}
       />
+     
+        <h5 style={{color:"black"}}>Current Zoom: { currentZoom }%</h5>
+     
     </div>
   );
 };
