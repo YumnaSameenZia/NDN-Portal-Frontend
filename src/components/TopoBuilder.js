@@ -1,12 +1,14 @@
 import ModalForm from "./ModalForm";
 import NodeTypes from "./NodeTypes";
 import { React, useState, useEffect } from "react";
-import { Row, Col, Button, Container, Toast } from "react-bootstrap";
+import { Row, Col, Button, Container, Toast, Form } from "react-bootstrap";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Notification from "./Notification";
 import { useHistory} from "react-router-dom";
 import { GraphComponent } from "./GraphComponent";
+import axios from "axios"
+import customTopoData from "../custom-topology/data.js"
 
 const TopoBuilder = ({
   topoData,
@@ -18,6 +20,9 @@ const TopoBuilder = ({
   useEffect(() => {
     document.title = "Topology Builder";
   }, []);
+
+  const [file, setFile] = useState("");
+  const [filename, setFilename] = useState("Choose File");
 
   const history = useHistory();
   const [showNodeModel, setShowNodeModel] = useState(false);
@@ -36,6 +41,34 @@ const TopoBuilder = ({
     y: Math.random() * 200,
   });
 
+  const onChange = (e) => {
+    setFile(e.target.files[0]);
+    setFilename(e.target.files[0].name);
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await axios.post("http://localhost:3001/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Access-Control-Allow-Origin" : "true"
+        },
+      });
+
+      const { fileName, filePath } = res.data;
+    } catch (err) {
+      console.log(err);
+    }
+
+    console.log(customTopoData[0].nodes);
+    setTopoData({ nodes: customTopoData[0].nodes, links: customTopoData[0].links });
+  };
+
+ 
   // add node different from custom node
   const addNode = (multiplier, nodeType) => {
     if (nodeType !== "Custom Node") {
@@ -446,6 +479,16 @@ const TopoBuilder = ({
           <Button variant="dark" onClick={() => createRingTopology()}>
             Ring Topology
           </Button>
+        </Col>
+        <Col>
+          <form onSubmit={onSubmit}>
+            <input type="file" id="uploadfile" onChange={onChange} />
+            <input
+              type="submit"
+              value="Upload"
+              className="btn btn-primary btn-block mt-4"
+            />
+          </form>
         </Col>
       </Row>
       {/************************************************************************/}
