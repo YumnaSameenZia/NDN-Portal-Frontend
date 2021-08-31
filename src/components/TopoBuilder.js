@@ -21,7 +21,7 @@ const TopoBuilder = ({
   const [filename, setFilename] = useState("Choose File");
   const [variant, setVariant] = useState("success");
   const [message, setMessage] = useState("");
-
+  const [showAlert, setShowAlert] = useState(false);
   // changes <title> of the tab with respect to the page/components
   useEffect(() => {
     document.title = "Topology Builder";
@@ -87,6 +87,13 @@ const TopoBuilder = ({
       nodes: customTopoData[0].nodes,
       links: customTopoData[0].links,
     });
+    setNodesNum(customTopoData[0].nodes.length + 1);
+    // SHOW ALERT
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 3000);
+    setShowTopologyNotification(false);
   };
 
   // add node different from custom node
@@ -391,8 +398,8 @@ const TopoBuilder = ({
     "(2) Double Click on Node to delete it.",
     "(3) Zoom in & out using mouse scroll",
   ];
-  const buildInstructions = instructions.map((instruction) => {
-    return <p>{instruction}</p>;
+  const buildInstructions = instructions.map((instruction, index) => {
+    return <p key={index}>{instruction}</p>;
   });
   {
     /************************************************************************/
@@ -441,180 +448,193 @@ const TopoBuilder = ({
     /************************************************************************/
   }
   return (
-    <Container
-      className="text-center"
-      style={{ minHeight: "100vh", backgroundColor: "black" }}
-    >
-      {/************************************************************************/}
-      {/* MAIN HEADING */}
-      <h1 style={{ fontFamily: "Roboto" }}>
-        <span>
-          <FontAwesomeIcon icon={faHome}></FontAwesomeIcon>{" "}
-        </span>
-        Build Topology
-      </h1>
-      {/************************************************************************/}
-      {/************************************************************************/}
-      {/* GRAPH COMPONENT */}
-      <Row>
-        <Col style={{ backgroundColor: "white" }}>
-          <GraphComponent
-            setNodeOptions={setNodeOptions}
-            setNodeClicked={setNodeClicked}
-            topoData={topoData}
-            graphConfig={graphConfig}
-            setShowOption={setShowOption}
-          />
-        </Col>
-      </Row>
-      {/************************************************************************/}
-      {/************************************************************************/}
-      {/* GENERATE BUTTONS */}
-      <Row>
-        <Col style={{ padding: "0px" }}>
-          <NodeTypes
-            addNode={addNode}
-            setNodeConfig={setNodeConfig}
-            setShowNodeModal={setShowNodeModel}
-            createSdnTopology={createSdnTopology}
-          ></NodeTypes>
-        </Col>
-      </Row>
-      {/************************************************************************/}
-      {/************************************************************************/}
-      {/* prebuild topologies */}
-      <Row>
-        <h3
-          style={{ marginLeft: "auto", marginRight: "auto", marginTop: "10px" }}
-        >
-          Prebuilt Topologies
-        </h3>
-      </Row>
-      <Row style={{ marginTop: "5px" }}>
-        <Col>
-          <Button variant="dark" onClick={() => createStarTopology(history)}>
-            Star Topology
-          </Button>
-        </Col>
-        <Col>
-          <Button variant="dark" onClick={() => createBusTopology(history)}>
-            Bus Topology
-          </Button>
-        </Col>
-        <Col>
-          <Button variant="dark" onClick={() => createRingTopology()}>
-            Ring Topology
-          </Button>
-        </Col>
-        <Col>
-          <Button
-            variant="dark"
-            onClick={() => setShowTopologyNotification(true)}
+    <>
+      <MessageAlert message={message} variant={variant} showAlert={showAlert} />
+      <Container
+        className="text-center"
+        style={{ minHeight: "100vh", backgroundColor: "black" }}
+      >
+        {/************************************************************************/}
+        {/* MAIN HEADING */}
+        <h1 style={{ fontFamily: "Roboto" }}>
+          <span>
+            <FontAwesomeIcon icon={faHome}></FontAwesomeIcon>{" "}
+          </span>
+          Build Topology
+        </h1>
+        {/************************************************************************/}
+        {/************************************************************************/}
+        {/* GRAPH COMPONENT */}
+        <Row>
+          <Col style={{ backgroundColor: "white" }}>
+            <GraphComponent
+              setNodeOptions={setNodeOptions}
+              setNodeClicked={setNodeClicked}
+              topoData={topoData}
+              graphConfig={graphConfig}
+              setShowOption={setShowOption}
+            />
+          </Col>
+        </Row>
+        {/************************************************************************/}
+        {/************************************************************************/}
+        {/* GENERATE BUTTONS */}
+        <Row>
+          <Col style={{ padding: "0px" }}>
+            <NodeTypes
+              addNode={addNode}
+              setNodeConfig={setNodeConfig}
+              setShowNodeModal={setShowNodeModel}
+              createSdnTopology={createSdnTopology}
+            ></NodeTypes>
+          </Col>
+        </Row>
+        {/************************************************************************/}
+        {/************************************************************************/}
+        {/* prebuild topologies */}
+        <Row>
+          <h3
+            style={{
+              marginLeft: "auto",
+              marginRight: "auto",
+              marginTop: "10px",
+            }}
           >
-            Upload Topology
-          </Button>
-        </Col>
-      </Row>
-      {/************************************************************************/}
-      {/************************************************************************/}
-      {/* Buttons */}
-      <Row style={{ marginTop: "25px" }}>
-        <Col>
-          <Button variant="dark" onClick={() => setShowInstructions(true)}>
-            Instructions
-          </Button>
-        </Col>
-        <Col>
-          <Button variant="dark" onClick={() => createTopology(history)}>
-            Submit
-          </Button>
-        </Col>
-      </Row>
-      {/************************************************************************/}
-      {/************************************************************************/}
-      {/* NODE MODAL */}
-      <ModalForm
-        title="Add Node"
-        config={nodeConfig}
-        fields={nodeModalFields}
-        showModal={showNodeModel}
-        setShowModal={setShowNodeModel}
-        submitHandler={addCustomNode}
-      />
-      {/************************************************************************/}
-      {/************************************************************************/}
-      {/* INSTRUCTIONS */}
-      <div style={{ position: "fixed", top: "0px", right: "14px" }}>
-        <Notification
-          title="Instructions"
-          show={showInstructions}
-          setShow={setShowInstructions}
-          message={buildInstructions}
+            Prebuilt Topologies
+          </h3>
+        </Row>
+        <Row style={{ marginTop: "5px" }}>
+          <Col>
+            <Button variant="dark" onClick={() => createStarTopology(history)}>
+              Star Topology
+            </Button>
+          </Col>
+          <Col>
+            <Button variant="dark" onClick={() => createBusTopology(history)}>
+              Bus Topology
+            </Button>
+          </Col>
+          <Col>
+            <Button variant="dark" onClick={() => createRingTopology()}>
+              Ring Topology
+            </Button>
+          </Col>
+          <Col>
+            <Button
+              variant="dark"
+              onClick={() => setShowTopologyNotification(true)}
+            >
+              Upload Topology
+            </Button>
+          </Col>
+        </Row>
+        {/************************************************************************/}
+        {/************************************************************************/}
+        {/* Buttons */}
+        <Row style={{ marginTop: "25px" }}>
+          <Col>
+            <Button variant="dark" onClick={() => setShowInstructions(true)}>
+              Instructions
+            </Button>
+          </Col>
+          <Col>
+            <Button variant="dark" onClick={() => createTopology(history)}>
+              Submit
+            </Button>
+          </Col>
+        </Row>
+        {/************************************************************************/}
+        {/************************************************************************/}
+        {/* NODE MODAL */}
+        <ModalForm
+          title="Add Node"
+          config={nodeConfig}
+          fields={nodeModalFields}
+          showModal={showNodeModel}
+          setShowModal={setShowNodeModel}
+          submitHandler={addCustomNode}
         />
         {/************************************************************************/}
         {/************************************************************************/}
-        {/* NOTIFICATION */}
-        <Notification
-          title="Adding Link"
-          show={showNotification}
-          setShow={setShowNotification}
-          message={linkToast.message}
-        />
-        {/************************************************************************/}
-        {/************************************************************************/}
-        {/* ADD LINK */}
-        <Toast show={showOption} onClose={() => setShowOption(false)}>
-          <Toast.Header>
-            <strong className="me-auto block">Link Options</strong>
-          </Toast.Header>
-          <Toast.Body className="text-left text-white bg-dark">
-            Select the node as link source or destination
-            <hr></hr>
-            <div className="d-flex" style={{ justifyContent: "space-around" }}>
-              <Button variant="secondary" onClick={addSource}>
-                Source
-              </Button>
-              <Button variant="secondary" onClick={addDestination}>
-                Destination
-              </Button>
-            </div>
-          </Toast.Body>
-        </Toast>
-        {/************************************************************************/}
-        {/************************************************************************/}
-        {/* DELETE NODE */}
-        <Toast show={nodeOptions} onClose={() => setNodeOptions(false)}>
-          <Toast.Header>
-            <strong className="me-auto block">Node Options</strong>
-          </Toast.Header>
-          <Toast.Body className="text-left text-white bg-dark">
-            <div className="d-flex" style={{ justifyContent: "space-around" }}>
-              <Button variant="secondary" onClick={deleteNode}>
-                Delete Node
-              </Button>
-            </div>
-          </Toast.Body>
-        </Toast>
-        {/************************************************************************/}
-        {/************************************************************************/}
-        {/* NOTIFICATION */}
-        <Notification
-          title="Upload Topology"
-          show={showTopologyNotification}
-          setShow={setShowTopologyNotification}
-          message={
-            <form onSubmit={onSubmit}>
-              <input type="file" id="uploadfile" onChange={onChange} />
-              <input
-                type="submit"
-                value="Upload"
-                className="btn btn-primary btn-block mt-4"
-              />
-            </form>
-          }
-        />
-      </div>
-    </Container>
+        {/* INSTRUCTIONS */}
+        <div style={{ position: "fixed", top: "0px", right: "14px" }}>
+          <Notification
+            title="Instructions"
+            show={showInstructions}
+            setShow={setShowInstructions}
+            message={buildInstructions}
+          />
+          {/************************************************************************/}
+          {/************************************************************************/}
+          {/* NOTIFICATION */}
+          <Notification
+            title="Adding Link"
+            show={showNotification}
+            setShow={setShowNotification}
+            message={linkToast.message}
+          />
+          {/************************************************************************/}
+          {/************************************************************************/}
+          {/* ADD LINK */}
+          <Toast show={showOption} onClose={() => setShowOption(false)}>
+            <Toast.Header>
+              <strong className="me-auto block">Link Options</strong>
+            </Toast.Header>
+            <Toast.Body className="text-left text-white bg-dark">
+              Select the node as link source or destination
+              <hr></hr>
+              <div
+                className="d-flex"
+                style={{ justifyContent: "space-around" }}
+              >
+                <Button variant="secondary" onClick={addSource}>
+                  Source
+                </Button>
+                <Button variant="secondary" onClick={addDestination}>
+                  Destination
+                </Button>
+              </div>
+            </Toast.Body>
+          </Toast>
+          {/************************************************************************/}
+          {/************************************************************************/}
+          {/* DELETE NODE */}
+          <Toast show={nodeOptions} onClose={() => setNodeOptions(false)}>
+            <Toast.Header>
+              <strong className="me-auto block">Node Options</strong>
+            </Toast.Header>
+            <Toast.Body className="text-left text-white bg-dark">
+              <div
+                className="d-flex"
+                style={{ justifyContent: "space-around" }}
+              >
+                <Button variant="secondary" onClick={deleteNode}>
+                  Delete Node
+                </Button>
+              </div>
+            </Toast.Body>
+          </Toast>
+          {/************************************************************************/}
+          {/************************************************************************/}
+          {/* NOTIFICATION */}
+          <Notification
+            title="Upload Topology"
+            show={showTopologyNotification}
+            setShow={setShowTopologyNotification}
+            message={
+              <form onSubmit={onSubmit}>
+                <input type="file" id="uploadfile" onChange={onChange} />
+                <input
+                  type="submit"
+                  value="Upload"
+                  className="btn btn-primary btn-block mt-4"
+                />
+              </form>
+            }
+          />
+        </div>
+      </Container>
+    </>
   );
 };
 
