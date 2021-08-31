@@ -110,7 +110,7 @@ const TopoBuilder = ({
 
     setNodesNum(topoData.nodes.length + 2);
     const nodes = topoData.nodes.concat({
-      id: `node${nodesNum}`,
+      id: `node${topoData.nodes.length + 1}`,
       x: nodeCordinates.x,
       y: nodeCordinates.y,
       memory: nodeConfig.memory,
