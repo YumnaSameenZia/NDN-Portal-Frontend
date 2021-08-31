@@ -5,10 +5,11 @@ import { Row, Col, Button, Container, Toast, Form } from "react-bootstrap";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Notification from "./Notification";
-import { useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { GraphComponent } from "./GraphComponent";
-import axios from "axios"
-import customTopoData from "../custom-topology/data.js"
+import axios from "axios";
+import customTopoData from "../custom-topology/data.js";
+import MessageAlert from "./MessageAlert"
 
 const TopoBuilder = ({
   topoData,
@@ -16,13 +17,15 @@ const TopoBuilder = ({
   graphConfig,
   createTopology,
 }) => {
+  const [file, setFile] = useState("");
+  const [filename, setFilename] = useState("Choose File");
+  const [variant, setVariant] = useState("success");
+  const [message, setMessage] = useState("");
+
   // changes <title> of the tab with respect to the page/components
   useEffect(() => {
     document.title = "Topology Builder";
-  }, []);
-
-  const [file, setFile] = useState("");
-  const [filename, setFilename] = useState("Choose File");
+  }, [message]);
 
   const history = useHistory();
   const [showNodeModel, setShowNodeModel] = useState(false);
@@ -43,32 +46,49 @@ const TopoBuilder = ({
 
   const onChange = (e) => {
     setFile(e.target.files[0]);
+    console.log(file);
     setFilename(e.target.files[0].name);
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    // appending the file selected using input
     const formData = new FormData();
     formData.append("file", file);
-
+    setVariant('success');
     try {
+      // posting data to endpoint /upload
       const res = await axios.post("http://localhost:3001/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "Access-Control-Allow-Origin" : "true"
+          "Access-Control-Allow-Origin": "true",
         },
       });
 
+      // server responding with filename and filepath
       const { fileName, filePath } = res.data;
+      console.log(fileName, filename);
+      setMessage("File Uploaded");
     } catch (err) {
-      console.log(err);
-    }
+      setVariant("danger");
 
+      // there was an error
+      console.log(err);
+      if (err.response.status === 500) {
+        console.log("There was a problem with the server");
+        setMessage(err.response.data.msg);
+      } else {
+        setMessage(err.response.data.msg);
+        console.log(err.response.data.msg);
+      }
+    }
     console.log(customTopoData[0].nodes);
-    setTopoData({ nodes: customTopoData[0].nodes, links: customTopoData[0].links });
+    setTopoData({
+      nodes: customTopoData[0].nodes,
+      links: customTopoData[0].links,
+    });
   };
 
- 
   // add node different from custom node
   const addNode = (multiplier, nodeType) => {
     if (nodeType !== "Custom Node") {
@@ -481,6 +501,7 @@ const TopoBuilder = ({
           </Button>
         </Col>
         <Col>
+          {message ? <MessageAlert message={message} variant={variant} /> : null}
           <form onSubmit={onSubmit}>
             <input type="file" id="uploadfile" onChange={onChange} />
             <input
