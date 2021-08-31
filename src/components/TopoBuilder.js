@@ -1,25 +1,31 @@
 import ModalForm from "./ModalForm";
 import NodeTypes from "./NodeTypes";
-import { Graph } from "react-d3-graph";
 import { React, useState, useEffect } from "react";
-import { Row, Col, Button, Container, Toast } from "react-bootstrap";
+import { Row, Col, Button, Container, Toast, Form } from "react-bootstrap";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Notification from "./Notification";
-import { useHistory, Link} from "react-router-dom";
-
+import { useHistory } from "react-router-dom";
+import { GraphComponent } from "./GraphComponent";
+import axios from "axios";
+import customTopoData from "../custom-topology/data.js";
+import MessageAlert from "./MessageAlert"
 
 const TopoBuilder = ({
   topoData,
   setTopoData,
   graphConfig,
-  onClickLink,
   createTopology,
 }) => {
+  const [file, setFile] = useState("");
+  const [filename, setFilename] = useState("Choose File");
+  const [variant, setVariant] = useState("success");
+  const [message, setMessage] = useState("");
+
   // changes <title> of the tab with respect to the page/components
   useEffect(() => {
     document.title = "Topology Builder";
-  }, []);
+  }, [message]);
 
   const history = useHistory();
   const [showNodeModel, setShowNodeModel] = useState(false);
@@ -29,12 +35,61 @@ const TopoBuilder = ({
     radius: "",
     angle: "",
     cpu: "",
+    name: "",
   });
   const [nodesNum, setNodesNum] = useState(topoData.nodes.length);
+
   const [nodeCordinates, setNodeCordinates] = useState({
     x: Math.random() * 200,
     y: Math.random() * 200,
   });
+
+  const onChange = (e) => {
+    setFile(e.target.files[0]);
+    console.log(file);
+    setFilename(e.target.files[0].name);
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    // appending the file selected using input
+    const formData = new FormData();
+    formData.append("file", file);
+    setVariant('success');
+    try {
+      // posting data to endpoint /upload
+      const res = await axios.post("http://localhost:3001/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Access-Control-Allow-Origin": "true",
+        },
+      });
+
+      // server responding with filename and filepath
+      const { fileName, filePath } = res.data;
+      console.log(fileName, filename);
+      setMessage("File Uploaded");
+    } catch (err) {
+      setVariant("danger");
+
+      // there was an error
+      console.log(err);
+      if (err.response.status === 500) {
+        console.log("There was a problem with the server");
+        setMessage(err.response.data.msg);
+      } else {
+        setMessage(err.response.data.msg);
+        console.log(err.response.data.msg);
+      }
+    }
+    console.log(customTopoData[0].nodes);
+    setTopoData({
+      nodes: customTopoData[0].nodes,
+      links: customTopoData[0].links,
+    });
+  };
+
+  // add node different from custom node
   const addNode = (multiplier, nodeType) => {
     if (nodeType !== "Custom Node") {
       setNodeConfig({
@@ -45,9 +100,26 @@ const TopoBuilder = ({
         cpu: 10 * multiplier,
       });
     }
+
     setNodesNum(nodesNum + 1);
     const nodes = topoData.nodes.concat({
       id: `node${nodesNum}`,
+      x: nodeCordinates.x,
+      y: nodeCordinates.y,
+      memory: nodeConfig.memory,
+      radius: nodeConfig.radius,
+      cache: nodeConfig.cache,
+      angle: nodeConfig.angle,
+      cpu: nodeConfig.cpu / 100,
+    });
+    setTopoData({ nodes: nodes, links: topoData.links });
+    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
+  };
+
+  // add a custom topology
+  const addCustomNode = (multiplier, nodeType) => {
+    const nodes = topoData.nodes.concat({
+      id: nodeConfig.name,
       x: nodeCordinates.x,
       y: nodeCordinates.y,
       memory: nodeConfig.memory,
@@ -101,7 +173,7 @@ const TopoBuilder = ({
 
     setTopoData({ nodes: bus.nodes, links: bus.links });
     setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
-  }
+  };
 
   // create a star topology
   const createStarTopology = () => {
@@ -170,6 +242,9 @@ const TopoBuilder = ({
       case "cpu":
         valid = value > 0 && value <= 100 ? true : false;
         break;
+      case "name":
+        valid = true;
+        break;
       default:
         break;
     }
@@ -187,7 +262,15 @@ const TopoBuilder = ({
     }
   };
 
+  console.log();
   const nodeModalFields = [
+    {
+      name: "name",
+      title: "Name",
+      placeHolder: "Enter Custom Node Name",
+      inputValue: nodeConfig.name,
+      changeHandler: handleNodeInputChange,
+    },
     {
       name: "memory",
       title: "Memory",
@@ -282,11 +365,6 @@ const TopoBuilder = ({
     message: "",
   });
 
-  const onRightClickNode = (event, nodeId) => {
-    event.preventDefault();
-    setShowOption(true);
-    setNodeClicked(nodeId);
-  };
   const addSource = () => {
     setLink({
       ...link,
@@ -310,7 +388,8 @@ const TopoBuilder = ({
   }
   const instructions = [
     "(1) Right click on node to add Link.",
-    "(2) Click on Node to delete it.",
+    "(2) Double Click on Node to delete it.",
+    "(3) Zoom in & out using mouse scroll",
   ];
   const buildInstructions = instructions.map((instruction) => {
     return <p>{instruction}</p>;
@@ -322,11 +401,6 @@ const TopoBuilder = ({
     // DELETING NODES
   }
   const [nodeOptions, setNodeOptions] = useState(false);
-
-  const onClickNode = (nodeId) => {
-    setNodeOptions(true);
-    setNodeClicked(nodeId);
-  };
 
   const deleteNode = () => {
     //   //also need to remove the links too
@@ -378,14 +452,13 @@ const TopoBuilder = ({
       {/* GRAPH COMPONENT */}
       <Row>
         <Col style={{ backgroundColor: "white" }}>
-          <Graph
-            id="graph-id"
-            data={topoData}
-            config={graphConfig}
-            onRightClickNode={onRightClickNode}
-            onClickNode={onClickNode}
-            onClickLink={onClickLink}
-          ></Graph>
+          <GraphComponent
+            setNodeOptions={setNodeOptions}
+            setNodeClicked={setNodeClicked}
+            topoData={topoData}
+            graphConfig={graphConfig}
+            setShowOption={setShowOption}
+          />
         </Col>
       </Row>
       {/************************************************************************/}
@@ -405,7 +478,11 @@ const TopoBuilder = ({
       {/************************************************************************/}
       {/* prebuild topologies */}
       <Row>
-        <h3 style={{marginLeft:"auto", marginRight:"auto", marginTop:"10px"}}>Prebuilt Topologies</h3>
+        <h3
+          style={{ marginLeft: "auto", marginRight: "auto", marginTop: "10px" }}
+        >
+          Prebuilt Topologies
+        </h3>
       </Row>
       <Row style={{ marginTop: "5px" }}>
         <Col>
@@ -422,6 +499,17 @@ const TopoBuilder = ({
           <Button variant="dark" onClick={() => createRingTopology()}>
             Ring Topology
           </Button>
+        </Col>
+        <Col>
+          {message ? <MessageAlert message={message} variant={variant} /> : null}
+          <form onSubmit={onSubmit}>
+            <input type="file" id="uploadfile" onChange={onChange} />
+            <input
+              type="submit"
+              value="Upload"
+              className="btn btn-primary btn-block mt-4"
+            />
+          </form>
         </Col>
       </Row>
       {/************************************************************************/}
@@ -448,7 +536,7 @@ const TopoBuilder = ({
         fields={nodeModalFields}
         showModal={showNodeModel}
         setShowModal={setShowNodeModel}
-        submitHandler={addNode}
+        submitHandler={addCustomNode}
       />
       {/************************************************************************/}
       {/************************************************************************/}

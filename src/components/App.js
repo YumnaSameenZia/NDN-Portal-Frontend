@@ -12,19 +12,16 @@ import {
   Switch,
   Route,
   Redirect,
-  useHistory,
 } from "react-router-dom";
 import ParticleComponent from "./ParticleComponent";
 
 function App() {
-  const history = useHistory();
   // TOPOLOGY CONFIGURATION
   const [data, setData] = useState({
-    nodes: [
-      { id: "node0", x: 100, y: 100 },
-      { id: "node1", x: 200, y: 200 },
+    nodes: [{ id: "node1" }, { id: "node2" }],
+    links: [
+      { source: "node1", target: "node2" },
     ],
-    links: [{ source: "node0", target: "node1" }],
   });
 
   // GRAPH MODULE CONFIGURATION
@@ -32,24 +29,16 @@ function App() {
   const myConfig = {
     nodeHighlightBehavior: true,
     node: {
-      color: "#42F3FB",
-      fontSize: 13,
-      size: 750,
-      svg: Router,
-      highlightFontSize: 13,
+      color: `lightgreen`,
+      size: 700,
+      fontSize: 12,
+      highlightFontSize: 12,
+      highlightStrokeColor: `blue`,
+      svg: Router
     },
     link: {
-      color: "green",
-      highlightColor: "blue",
+      highlightColor: `lightblue`,
     },
-  };
-
-  const onClickNode = function (nodeId) {
-    window.alert(nodeId);
-  };
-
-  const onClickLink = function (source, target) {
-    window.alert(`Clicked link between ${source} and ${target}`);
   };
 
   // LOGIN STATES AND FUNCTIONS
@@ -85,10 +74,8 @@ function App() {
           <Route path="/view">
             {authorized ? (
               <TopoViewer
-                data={data}
-                myConfig={myConfig}
-                onClickNode={onClickNode}
-                onClickLink={onClickLink}
+              topoData={data}
+              graphConfig={myConfig}
               ></TopoViewer>
             ) : (
               <Redirect to="/login"></Redirect>
@@ -102,8 +89,6 @@ function App() {
                 setTopoData={setData}
                 createTopology={createTopology}
                 graphConfig={myConfig}
-                onClickNode={onClickNode}
-                onClickLink={onClickLink}
               ></TopoBuilder>
             ) : (
               <Redirect to="/login"></Redirect>

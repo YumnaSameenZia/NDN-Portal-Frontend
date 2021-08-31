@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import { faEthernet, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const NodeTypes = ({ addNode, setNodeConfig, setShowNodeModal, createSdnTopology }) => {
+const NodeTypes = ({ addNode, setNodeConfig, setShowNodeModal, createSdnTopology}) => {
   const nodeTypes = {
     "SDN Controller": 5,
     "Simple Node": 1,

@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from "react";
 import { Graph } from "react-d3-graph";
+
 import axios from "axios";
 import {
   Container,
@@ -11,8 +12,9 @@ import {
   ProgressBar,
 } from "react-bootstrap";
 import Terminal from "./Terminal";
+import { GraphComponent } from "./GraphComponent";
 
-const TopoViewer = ({ data, myConfig, onClickLink }) => {
+const TopoViewer = ({ topoData, graphConfig, onClickLink }) => {
   // changes <title> of the tab with respect to the page/components
   useEffect(() => {
     document.title = "Topology Viewer";
@@ -186,10 +188,9 @@ const TopoViewer = ({ data, myConfig, onClickLink }) => {
                 backgroundColor: "white",
               }}
             >
-              <Graph
-                id="graph-id" // id is mandatory
-                data={data}
-                config={myConfig}
+              <GraphComponent
+                topoData={topoData}
+                graphConfig={graphConfig}
                 onClickNode={onClickNode}
                 onClickLink={onClickLink}
               />
