@@ -82,6 +82,7 @@ const TopoViewer = ({ topoData, graphConfig, onClickLink }) => {
 
   const onClickNode = (nodeID) => {
     setNodeClicked(nodeID.toString());
+    console.log(nodeID);
     setShowModal(true);
   };
 

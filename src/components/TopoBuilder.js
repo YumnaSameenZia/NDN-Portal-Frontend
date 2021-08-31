@@ -37,7 +37,7 @@ const TopoBuilder = ({
     cpu: "",
     name: "",
   });
-  const [nodesNum, setNodesNum] = useState(topoData.nodes.length);
+  const [nodesNum, setNodesNum] = useState(topoData.nodes.length + 2);
 
   const [nodeCordinates, setNodeCordinates] = useState({
     x: Math.random() * 200,
@@ -87,7 +87,7 @@ const TopoBuilder = ({
       nodes: customTopoData[0].nodes,
       links: customTopoData[0].links,
     });
-    setNodesNum(customTopoData[0].nodes.length + 1);
+    setNodesNum(topoData.nodes.length + 2);
     // SHOW ALERT
     setShowAlert(true);
     setTimeout(() => {
@@ -108,7 +108,7 @@ const TopoBuilder = ({
       });
     }
 
-    setNodesNum(nodesNum + 1);
+    setNodesNum(topoData.nodes.length + 2);
     const nodes = topoData.nodes.concat({
       id: `node${nodesNum}`,
       x: nodeCordinates.x,
@@ -473,6 +473,17 @@ const TopoBuilder = ({
               topoData={topoData}
               graphConfig={graphConfig}
               setShowOption={setShowOption}
+              onClickNode={(nodeId, node) => {
+                console.log(nodeId, node);
+                const message = `Node Configurations: \n 
+                CPU: ${node.cpu ? node.cpu * 100 + "%" : "20%"}\n
+                Memory: ${node.memory ? node.memory + "Kb" : "1024Kb"}\n
+                Cache: ${node.cache ? node.cache + "Kb" : "512Kb"}\n
+                Radius: ${node.radius ? node.radius : "0.1"}\n
+                Angle: ${node.angle ? node.angle + "degree" : "0 degree"}\n`;
+                setLinkToast({ message });
+                setShowNotification(true);
+              }}
             />
           </Col>
         </Row>
@@ -568,7 +579,7 @@ const TopoBuilder = ({
           {/************************************************************************/}
           {/* NOTIFICATION */}
           <Notification
-            title="Adding Link"
+            title="Notification"
             show={showNotification}
             setShow={setShowNotification}
             message={linkToast.message}

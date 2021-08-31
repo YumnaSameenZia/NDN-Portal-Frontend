@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import {Graph} from "react-d3-graph"
+import React, { useState } from "react";
+import { Graph } from "react-d3-graph";
 
 export const GraphComponent = ({
   setNodeOptions,
@@ -9,9 +9,7 @@ export const GraphComponent = ({
   graphConfig,
   onClickLink,
   onClickNode,
-
 }) => {
-
   const [currentZoom, setCurrentZoom] = useState(100);
 
   const onDoubleClickNode = function (nodeId, node) {
@@ -26,7 +24,7 @@ export const GraphComponent = ({
   };
 
   const onNodePositionChange = function (nodeId, x, y) {
-      console.log(`Node ${nodeId} moved to new position x= ${x} y= ${y}`);
+    console.log(`Node ${nodeId} moved to new position x= ${x} y= ${y}`);
   };
 
   const onZoomChange = function (previousZoom, newZoom) {
@@ -34,22 +32,26 @@ export const GraphComponent = ({
     setCurrentZoom(Math.floor(newZoom * 100));
   };
 
+  // const onClickNode = (nodeId, node) => {
+  //   console.log(nodeId);
+  // };
+
   return (
-    <div style ={{width:"100%"}}>
+    <div style={{ width: "100%" }}>
       <Graph
         id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
         data={topoData}
         onClickNode={onClickNode}
         config={graphConfig}
+        onClickNode={onClickNode}
         onDoubleClickNode={onDoubleClickNode}
         onRightClickNode={onRightClickNode}
         onClickLink={onClickLink}
         onNodePositionChange={onNodePositionChange}
         onZoomChange={onZoomChange}
       />
-     
-        <h5 style={{color:"black"}}>Current Zoom: { currentZoom }%</h5>
-     
+
+      <h5 style={{ color: "black" }}>Current Zoom: {currentZoom}%</h5>
     </div>
   );
 };
