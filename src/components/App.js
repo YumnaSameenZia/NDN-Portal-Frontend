@@ -7,21 +7,14 @@ import TitlePage from "./TitlePage";
 import SignUp from "./SignUp";
 import Router from "../icons/router.svg";
 
-import {
-  BrowserRouter,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import ParticleComponent from "./ParticleComponent";
 
 function App() {
   // TOPOLOGY CONFIGURATION
   const [data, setData] = useState({
     nodes: [{ id: "node1" }, { id: "node2" }],
-    links: [
-      { source: "node1", target: "node2" },
-    ],
+    links: [{ source: "node1", target: "node2" }],
   });
 
   // GRAPH MODULE CONFIGURATION
@@ -34,7 +27,7 @@ function App() {
       fontSize: 12,
       highlightFontSize: 12,
       highlightStrokeColor: `blue`,
-      svg: Router
+      svg: Router,
     },
     link: {
       highlightColor: `lightblue`,
@@ -73,10 +66,7 @@ function App() {
         <Switch>
           <Route path="/view">
             {authorized ? (
-              <TopoViewer
-              topoData={data}
-              graphConfig={myConfig}
-              ></TopoViewer>
+              <TopoViewer topoData={data} graphConfig={myConfig}></TopoViewer>
             ) : (
               <Redirect to="/login"></Redirect>
             )}

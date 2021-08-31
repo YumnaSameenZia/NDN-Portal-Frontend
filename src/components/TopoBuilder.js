@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 import { GraphComponent } from "./GraphComponent";
 import axios from "axios";
 import customTopoData from "../custom-topology/data.js";
-import MessageAlert from "./MessageAlert"
+import MessageAlert from "./MessageAlert";
 
 const TopoBuilder = ({
   topoData,
@@ -55,7 +55,7 @@ const TopoBuilder = ({
     // appending the file selected using input
     const formData = new FormData();
     formData.append("file", file);
-    setVariant('success');
+    setVariant("success");
     try {
       // posting data to endpoint /upload
       const res = await axios.post("http://localhost:3001/upload", formData, {
@@ -434,6 +434,12 @@ const TopoBuilder = ({
   {
     /************************************************************************/
   }
+  // UPLOADING TOPOLOGY STATES
+  const [showTopologyNotification, setShowTopologyNotification] =
+    useState(false);
+  {
+    /************************************************************************/
+  }
   return (
     <Container
       className="text-center"
@@ -501,15 +507,12 @@ const TopoBuilder = ({
           </Button>
         </Col>
         <Col>
-          {message ? <MessageAlert message={message} variant={variant} /> : null}
-          <form onSubmit={onSubmit}>
-            <input type="file" id="uploadfile" onChange={onChange} />
-            <input
-              type="submit"
-              value="Upload"
-              className="btn btn-primary btn-block mt-4"
-            />
-          </form>
+          <Button
+            variant="dark"
+            onClick={() => setShowTopologyNotification(true)}
+          >
+            Upload Topology
+          </Button>
         </Col>
       </Row>
       {/************************************************************************/}
@@ -592,6 +595,24 @@ const TopoBuilder = ({
             </div>
           </Toast.Body>
         </Toast>
+        {/************************************************************************/}
+        {/************************************************************************/}
+        {/* NOTIFICATION */}
+        <Notification
+          title="Upload Topology"
+          show={showTopologyNotification}
+          setShow={setShowTopologyNotification}
+          message={
+            <form onSubmit={onSubmit}>
+              <input type="file" id="uploadfile" onChange={onChange} />
+              <input
+                type="submit"
+                value="Upload"
+                className="btn btn-primary btn-block mt-4"
+              />
+            </form>
+          }
+        />
       </div>
     </Container>
   );
