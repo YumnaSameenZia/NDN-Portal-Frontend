@@ -92,7 +92,7 @@ const TopoBuilder = ({
     setShowAlert(true);
     setTimeout(() => {
       setShowAlert(false);
-    }, 3000);
+    }, 10000);
     setShowTopologyNotification(false);
   };
 
@@ -393,7 +393,7 @@ const TopoBuilder = ({
     "(1) Right click on node to add Link.",
     "(2) Double Click on Node to delete it.",
     "(3) Zoom in & out using mouse scroll",
-    "(4) Click to view current node properties" 
+    "(4) Click to view current node properties",
   ];
   const buildInstructions = instructions.map((instruction, index) => {
     return <p key={index}>{instruction}</p>;
