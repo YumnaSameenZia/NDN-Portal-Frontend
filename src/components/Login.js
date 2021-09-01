@@ -86,11 +86,12 @@ const SignUp = ({ setAuthorized }) => {
                 <div className="text-center">
                   <Button
                     variant="primary"
+                    style={{width:"150px"}}
                     onClick={() => {
                       handleLogin(history);
                     }}
                   >
-                    Submit
+                    Log In
                   </Button>
                 </div>
               </Form>

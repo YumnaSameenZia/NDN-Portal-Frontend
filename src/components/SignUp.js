@@ -85,6 +85,7 @@ const SignUp = ({ setAuthorized }) => {
                 <div className="text-center">
                   <Button
                     variant="primary"
+                    style={{ width: "150px" }}
                     onClick={() => {
                       handleSignUp();
                     }}

@@ -1,7 +1,7 @@
 import ModalForm from "./ModalForm";
 import NodeTypes from "./NodeTypes";
 import { React, useState, useEffect } from "react";
-import { Row, Col, Button, Container, Toast, Form } from "react-bootstrap";
+import { Row, Col, Button, Container, Toast } from "react-bootstrap";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Notification from "./Notification";
@@ -315,12 +315,9 @@ const TopoBuilder = ({
     },
   ];
 
-  {
-    /************************************************************************/
-  }
-  {
-    /* CONFIGURATION TO ADD LINK */
-  }
+  /************************************************************************/
+  /* CONFIGURATION TO ADD LINK */
+  /************************************************************************/
   const [link, setLink] = useState({ source: "", target: "" });
   useEffect(() => {
     if (link.source === "" && link.target !== "") {
@@ -387,26 +384,25 @@ const TopoBuilder = ({
     });
     setShowOption(false);
   };
-  {
-    /************************************************************************/
-  }
-  {
-    // INSTRUCTIONS
-  }
+
+  /************************************************************************/
+  // INSTRUCTIONS
+  /************************************************************************/
+
   const instructions = [
     "(1) Right click on node to add Link.",
     "(2) Double Click on Node to delete it.",
     "(3) Zoom in & out using mouse scroll",
+    "(4) Click to view current node properties" 
   ];
   const buildInstructions = instructions.map((instruction, index) => {
     return <p key={index}>{instruction}</p>;
   });
-  {
-    /************************************************************************/
-  }
-  {
-    // DELETING NODES
-  }
+
+  /************************************************************************/
+  // DELETING NODES
+  /************************************************************************/
+
   const [nodeOptions, setNodeOptions] = useState(false);
 
   const deleteNode = () => {
@@ -438,15 +434,12 @@ const TopoBuilder = ({
     console.log("Deleted Node!");
   };
 
-  {
-    /************************************************************************/
-  }
+  /************************************************************************/
   // UPLOADING TOPOLOGY STATES
   const [showTopologyNotification, setShowTopologyNotification] =
     useState(false);
-  {
-    /************************************************************************/
-  }
+  /************************************************************************/
+
   return (
     <>
       <MessageAlert message={message} variant={variant} showAlert={showAlert} />
@@ -475,12 +468,12 @@ const TopoBuilder = ({
               setShowOption={setShowOption}
               onClickNode={(nodeId, node) => {
                 console.log(nodeId, node);
-                const message = `Node Configurations: \n 
-                CPU: ${node.cpu ? node.cpu * 100 + "%" : "20%"}\n
-                Memory: ${node.memory ? node.memory + "Kb" : "1024Kb"}\n
-                Cache: ${node.cache ? node.cache + "Kb" : "512Kb"}\n
-                Radius: ${node.radius ? node.radius : "0.1"}\n
-                Angle: ${node.angle ? node.angle + "degree" : "0 degree"}\n`;
+                const message = `Node Configurations: \n\n
+                CPU: ${node.cpu ? node.cpu * 100 + "%" : "20%"}\n\n
+                Memory: ${node.memory ? node.memory + "Kb" : "1024Kb"}\n\n
+                Cache: ${node.cache ? node.cache + "Kb" : "512Kb"}\n\n
+                Radius: ${node.radius ? node.radius : "0.1"}\n\n
+                Angle: ${node.angle ? node.angle + "degree" : "0 degree"}\n\n`;
                 setLinkToast({ message });
                 setShowNotification(true);
               }}
@@ -503,57 +496,80 @@ const TopoBuilder = ({
         {/************************************************************************/}
         {/************************************************************************/}
         {/* prebuild topologies */}
-        <Row>
-          <h3
-            style={{
-              marginLeft: "auto",
-              marginRight: "auto",
-              marginTop: "10px",
-            }}
-          >
-            Prebuilt Topologies
-          </h3>
-        </Row>
-        <Row style={{ marginTop: "5px" }}>
-          <Col>
-            <Button variant="dark" onClick={() => createStarTopology(history)}>
-              Star Topology
-            </Button>
-          </Col>
-          <Col>
-            <Button variant="dark" onClick={() => createBusTopology(history)}>
-              Bus Topology
-            </Button>
-          </Col>
-          <Col>
-            <Button variant="dark" onClick={() => createRingTopology()}>
-              Ring Topology
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              variant="dark"
-              onClick={() => setShowTopologyNotification(true)}
-            >
-              Upload Topology
-            </Button>
-          </Col>
-        </Row>
-        {/************************************************************************/}
-        {/************************************************************************/}
-        {/* Buttons */}
         <Row style={{ marginTop: "25px" }}>
           <Col>
-            <Button variant="dark" onClick={() => setShowInstructions(true)}>
-              Instructions
-            </Button>
+            <Row>
+              <Col style={{ marginRight: "5px" }}>
+                <Button
+                  variant="secondary"
+                  style={{ width: "100%" }}
+                  onClick={() => createStarTopology(history)}
+                >
+                  Star Topology
+                </Button>
+              </Col>
+              <Col style={{ marginRight: "5px" }}>
+                <Button
+                  style={{ width: "100%" }}
+                  variant="secondary"
+                  onClick={() => createBusTopology(history)}
+                >
+                  Bus Topology
+                </Button>
+              </Col>
+              <Col style={{ marginRight: "5px" }}>
+                <Button
+                  style={{ width: "100%" }}
+                  variant="secondary"
+                  onClick={() => createRingTopology()}
+                >
+                  Ring Topology
+                </Button>
+              </Col>
+            </Row>
           </Col>
+          {/************************************************************************/}
+          {/************************************************************************/}
+          {/* end prebuild topologies */}
+          {/************************************************************************/}
+          {/************************************************************************/}
+          {/* submit, instruction */}
           <Col>
-            <Button variant="dark" onClick={() => createTopology(history)}>
-              Submit
-            </Button>
+            <Row>
+              <Col style={{ marginRight: "5px" }}>
+                <Button
+                  variant="dark"
+                  style={{ width: "100%" }}
+                  onClick={() => setShowTopologyNotification(true)}
+                >
+                  Upload
+                </Button>
+              </Col>
+              <Col style={{ marginRight: "5px" }}>
+                <Button
+                  style={{ width: "100%" }}
+                  variant="info"
+                  onClick={() => setShowInstructions(true)}
+                >
+                  Instructions
+                </Button>
+              </Col>
+              <Col style={{ marginRight: "5px" }}>
+                <Button
+                  style={{ width: "100%" }}
+                  variant="primary"
+                  onClick={() => createTopology(history)}
+                >
+                  Submit
+                </Button>
+              </Col>
+            </Row>
           </Col>
+          {/************************************************************************/}
+          {/************************************************************************/}
+          {/* end submit, instruction */}
         </Row>
+        {/* <Row style={{ marginTop: "25px" }}></Row> */}
         {/************************************************************************/}
         {/************************************************************************/}
         {/* NODE MODAL */}
@@ -579,7 +595,7 @@ const TopoBuilder = ({
           {/************************************************************************/}
           {/* NOTIFICATION */}
           <Notification
-            title="Notification"
+            title="Node Properties"
             show={showNotification}
             setShow={setShowNotification}
             message={linkToast.message}
