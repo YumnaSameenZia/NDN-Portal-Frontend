@@ -89,7 +89,7 @@ function App() {
           </Route>
           {/* SIGN UP NEW USER */}
           <Route path="/signup">
-            <SignUp />
+            <SignUp setAuthorized={setAuthorized} />
           </Route>
 
           <Route path="/">

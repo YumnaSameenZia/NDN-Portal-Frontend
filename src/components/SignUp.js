@@ -1,9 +1,7 @@
 import axios from "axios";
 import { React, useState, useEffect } from "react";
 import { Container, Button, Row, Form, Col } from "react-bootstrap";
-import {
-  Redirect,
-} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const SignUp = ({ setAuthorized }) => {
   // changes <title> of the tab with respect to the page/components
@@ -16,21 +14,28 @@ const SignUp = ({ setAuthorized }) => {
     password: "",
   });
 
+  const history = useHistory();
+
   const handleSignUp = () => {
-    alert("New Added User");
-    console.log(user.username, user.password);
-    let newUser = { username: user.username, password: user.password };
-    // create a new json object and place it in the file
-    console.log(newUser);
-    // sending data to node js for adding in the user.json file
-    axios
-      .post("http://localhost:3001/signup", newUser)
-      .then((response) => {
-        // redirect to same page with empty text fields
-      })
-      .catch((error) => {
-        window.alert(error);
-      });
+    if (user.username !== "" && user.username.length <= 10) {
+      console.log(user.username, user.password);
+      let newUser = { username: user.username, password: user.password };
+      // create a new json object and place it in the file
+      console.log(newUser);
+      // sending data to node js for adding in the user.json file
+      axios
+        .post("http://localhost:3001/signup", newUser)
+        .then((response) => {
+          setAuthorized(true);
+          history.push("/build");
+        })
+        .catch((error) => {
+          window.alert(error);
+        });
+      alert("New User Added!");
+    } else {
+      alert("Username or Password is not appropriate!");
+    }
   };
 
   return (
