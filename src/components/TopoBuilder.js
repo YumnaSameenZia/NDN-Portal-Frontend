@@ -503,53 +503,72 @@ const TopoBuilder = ({
         {/************************************************************************/}
         {/************************************************************************/}
         {/* prebuild topologies */}
-        <Row>
-          <h3
-            style={{
-              marginLeft: "auto",
-              marginRight: "auto",
-              marginTop: "10px",
-            }}
-          >
-            Prebuilt Topologies
-          </h3>
-        </Row>
-        <Row style={{ marginTop: "5px" }}>
+        <Row
+          style={{ marginTop: "30px", display: "flex", alignContent: "center" }}
+        >
           <Col>
-            <Button variant="dark" onClick={() => createStarTopology(history)}>
+            <Button
+              variant="light"
+              className="btn-lg btn-block"
+              onClick={() => createStarTopology(history)}
+            >
               Star Topology
             </Button>
           </Col>
           <Col>
-            <Button variant="dark" onClick={() => createBusTopology(history)}>
+            <Button
+              variant="light"
+              className="btn-lg btn-block"
+              onClick={() => createBusTopology(history)}
+            >
               Bus Topology
             </Button>
           </Col>
           <Col>
-            <Button variant="dark" onClick={() => createRingTopology()}>
+            <Button
+              variant="light"
+              className="btn-lg btn-block"
+              onClick={() => createRingTopology()}
+            >
               Ring Topology
             </Button>
           </Col>
-          <Col>
+          <Col
+            style={{
+              flexGrow: "1.5",
+              borderRight: "3px solid white",
+              marginRight: "30px",
+              marginLeft: "-30px",
+            }}
+          >
             <Button
-              variant="dark"
+              variant="light"
+              className="btn-lg"
               onClick={() => setShowTopologyNotification(true)}
             >
               Upload Topology
             </Button>
           </Col>
-        </Row>
-        {/************************************************************************/}
-        {/************************************************************************/}
-        {/* Buttons */}
-        <Row style={{ marginTop: "25px" }}>
+
+          {/************************************************************************/}
+          {/************************************************************************/}
+          {/* Buttons */}
+
           <Col>
-            <Button variant="dark" onClick={() => setShowInstructions(true)}>
+            <Button
+              variant="secondary"
+              className="btn-lg btn-block"
+              onClick={() => setShowInstructions(true)}
+            >
               Instructions
             </Button>
           </Col>
           <Col>
-            <Button variant="dark" onClick={() => createTopology(history)}>
+            <Button
+              variant="primary"
+              className="btn-lg btn-block"
+              onClick={() => createTopology(history)}
+            >
               Submit
             </Button>
           </Col>

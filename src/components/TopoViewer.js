@@ -21,7 +21,7 @@ const TopoViewer = ({ topoData, graphConfig, onClickLink }) => {
   }, []);
 
   const [count, setCount] = useState(0);
-  const [output, setOutput] = useState("");
+  const [output, setOutput] = useState("Quick command output appears here...");
 
   /* TERMINAL RELATED METHODS AND STATES */
 
@@ -129,7 +129,7 @@ const TopoViewer = ({ topoData, graphConfig, onClickLink }) => {
 
         <Modal.Footer>
           <Button
-            variant="primary"
+            variant="secondary"
             onClick={() => {
               setShowModal(false);
             }}
@@ -200,9 +200,16 @@ const TopoViewer = ({ topoData, graphConfig, onClickLink }) => {
         </Row>
       </div>
 
-      <Container>
-        <Row className="mt-1" class="text-center">
-          <Col>
+      <Container style={{ margin: "10px 0px 10px 0px" }}>
+        <Row
+          className="mt-1"
+          class="text-center"
+          style={{ justifyContent: "center", alignContent: "center" }}
+        >
+          <Col
+            className="border-right border-3 border-white"
+            style={{ flexGrow: "2" }}
+          >
             <Button
               variant="secondary"
               onClick={() => {
@@ -214,7 +221,11 @@ const TopoViewer = ({ topoData, graphConfig, onClickLink }) => {
               Terminal
             </Button>{" "}
           </Col>
-          <Col>
+
+          <Col
+            className="border-right border-3 border-white"
+            style={{ flexGrow: "2" }}
+          >
             <Button
               variant="secondary"
               onClick={() => {
@@ -229,7 +240,8 @@ const TopoViewer = ({ topoData, graphConfig, onClickLink }) => {
               Start NDN Stack
             </Button>{" "}
           </Col>
-          <Col>
+
+          <Col style={{ flexGrow: "2" }}>
             <Button
               variant="secondary"
               onClick={() => {

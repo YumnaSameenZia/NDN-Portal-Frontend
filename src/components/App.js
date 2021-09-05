@@ -31,6 +31,7 @@ function App() {
     },
     link: {
       highlightColor: `lightblue`,
+      color: `blue`,
     },
   };
 
