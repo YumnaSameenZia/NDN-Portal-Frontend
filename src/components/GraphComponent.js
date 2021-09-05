@@ -37,7 +37,7 @@ export const GraphComponent = ({
   // };
 
   return (
-    <div style={{ width: "100%" }}>
+    <div>
       <Graph
         id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
         data={topoData}

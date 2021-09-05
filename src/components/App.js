@@ -16,11 +16,11 @@ function App() {
     nodes: [{ id: "node1" }, { id: "node2" }],
     links: [{ source: "node1", target: "node2" }],
   });
-
   // GRAPH MODULE CONFIGURATION
   // changed 'size' property and changed node from circle to 'router.svg'
   const myConfig = {
     nodeHighlightBehavior: true,
+    width: window.innerWidth,
     node: {
       color: `lightgreen`,
       size: 700,
@@ -30,7 +30,8 @@ function App() {
       svg: Router,
     },
     link: {
-      highlightColor: `lightblue`,
+      color: "green",
+      highlightColor: `blue`,
     },
   };
 
