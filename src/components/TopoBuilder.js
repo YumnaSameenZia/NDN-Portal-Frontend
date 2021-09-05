@@ -250,7 +250,18 @@ const TopoBuilder = ({
         valid = value > 0 && value <= 100 ? true : false;
         break;
       case "name":
-        valid = true;
+        // checking for node duplicates 
+        const dp = topoData.nodes.filter((tp) => tp.id == value);
+        console.log("Duplicates Available?: " + dp.length > 0);
+        // if no duplicate is found
+        if (dp.length == 0) {
+          valid = true;
+        }      
+        // check if the string contains spaces or not
+        if(value.indexOf(' ') >= 0){
+          console.log("Contain Spaces");
+          valid = false;
+        }
         break;
       default:
         break;
@@ -277,6 +288,7 @@ const TopoBuilder = ({
       placeHolder: "Enter Custom Node Name",
       inputValue: nodeConfig.name,
       changeHandler: handleNodeInputChange,
+      maxLength: 10
     },
     {
       name: "memory",
@@ -392,8 +404,8 @@ const TopoBuilder = ({
   const instructions = [
     "(1) Right click on node to add Link.",
     "(2) Double Click on Node to delete it.",
-    "(3) Zoom in & out using mouse scroll",
-    "(4) Click to view current node properties",
+    "(3) Zoom in & out using mouse scroll.",
+    "(4) Click to view current node properties.",
   ];
   const buildInstructions = instructions.map((instruction, index) => {
     return <p key={index}>{instruction}</p>;

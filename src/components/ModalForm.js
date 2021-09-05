@@ -20,6 +20,7 @@ const ModalForm = ({
         placeHolder={value.placeHolder}
         inputValue={value.inputValue}
         changeHandler={value.changeHandler}
+        maxLength={value.maxLength}
       ></TextInput>
     );
   });
