@@ -143,11 +143,11 @@ const TopoBuilder = ({
   const createSdnTopology = () => {
     const sdn = {
       nodes: [
-        { id: "node1", x: 358, y: 190 },
-        { id: "node2", x: 314, y: 346 },
-        { id: "node3", x: 397, y: 493 },
-        { id: "node4", x: 178, y: 304 },
-        { id: "s", x: 211, y: 449 },
+        { id: "node1", x: 478, y: 281 },
+        { id: "node2", x: 576, y: 230 },
+        { id: "node3", x: 360, y: 276 },
+        { id: "node4", x: 226, y: 264 },
+        { id: "s", x: 394, y: 144 },
       ],
       links: [
         { source: "s", target: "node1" },
@@ -164,11 +164,11 @@ const TopoBuilder = ({
   const createBusTopology = () => {
     const bus = {
       nodes: [
-        { id: "node1", x: 133, y: 192 },
-        { id: "node2", x: 224, y: 131 },
-        { id: "node3", x: 478, y: 359 },
-        { id: "node4", x: 323, y: 463 },
-        { id: "node5", x: 151, y: 104 },
+        { id: "node1", fx: 564, fy: 288 },
+        { id: "node2", fx: 583, fy: 160 },
+        { id: "node3", fx: 418, fy: 91 },
+        { id: "node4", fx: 198, fy: 198 },
+        { id: "node5", fx: 307, fy: 302 },
       ],
       links: [
         { source: "node1", target: "node2" },
@@ -186,11 +186,11 @@ const TopoBuilder = ({
   const createStarTopology = () => {
     const star = {
       nodes: [
-        { id: "node1", x: 358, y: 190 },
-        { id: "node2", x: 314, y: 346 },
-        { id: "node3", x: 397, y: 493 },
-        { id: "node4", x: 178, y: 304 },
-        { id: "node5", x: 211, y: 449 },
+        { id: "node1", fx: 417, fy: 325 },
+        { id: "node2", fx: 669, fy: 189},
+        { id: "node3", fx: 464, fy: 83 },
+        { id: "node4", fx: 204, fy: 188 },
+        { id: "node5", fx: 437, fy: 194 },
       ],
       links: [
         { source: "node5", target: "node1" },
@@ -200,18 +200,20 @@ const TopoBuilder = ({
       ],
     };
 
+    console.log(star);
+
     setTopoData({ nodes: star.nodes, links: star.links });
-    setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
+    //setNodeCordinates({ x: Math.random() * 200, y: Math.random() * 200 });
   };
 
   // create a ring topology
   const createRingTopology = () => {
     const ring = {
       nodes: [
-        { id: "node1", x: 100, y: 100 },
-        { id: "node2", x: 200, y: 200 },
-        { id: "node3", x: 300, y: 200 },
-        { id: "node4", x: 500, y: 200 },
+        { id: "node1", fx: 427, fy: 307 },
+        { id: "node2", fx: 604, fy: 196 },
+        { id: "node3", fx: 470, fy: 97 },
+        { id: "node4", fx: 236, fy: 193 },
       ],
       links: [
         { source: "node1", target: "node4" },
