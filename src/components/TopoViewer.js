@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import { Graph } from "react-d3-graph";
+import TerminalComp from "./Terminal";
 
 import axios from "axios";
 import {
@@ -29,7 +29,7 @@ const TopoViewer = ({ topoData, graphConfig, onClickLink }) => {
 
   const terminal = () => {
     if (showTerminal) {
-      return <Terminal onClickCmd={onClickCmd} />;
+      return <TerminalComp onClickCmd={onClickCmd} />;
     } else {
       return (
         <Form style={{ marginTop: "5px", position: "relative" }}>
@@ -87,11 +87,21 @@ const TopoViewer = ({ topoData, graphConfig, onClickLink }) => {
   };
 
   const onClickCmd = async (cmd) => {
+    let output_received = 0;
+    setTimeout((output_received) => {
+      if (output_received === 0) {
+        setShowLoading(false);
+        setOutput("No output received!");
+        return "No Output received!";
+      }
+    }, 5000);
     setShowModal(false);
     setShowLoading(true);
+
     let result = await axios.post("http://localhost:3001/command", {
       command: cmd,
     });
+    output_received = 1;
     await setOutput(result.data);
     setShowLoading(false);
     return result.data;
@@ -153,7 +163,7 @@ const TopoViewer = ({ topoData, graphConfig, onClickLink }) => {
         keyboard={false}
       >
         <Modal.Body>Performing operation, please wait awhile...</Modal.Body>
-        <ProgressBar animated now={50} />
+        <ProgressBar animated now={100} />
         <Modal.Footer></Modal.Footer>
       </Modal>
     );
