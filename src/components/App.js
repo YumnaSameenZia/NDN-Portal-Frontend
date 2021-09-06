@@ -21,11 +21,12 @@ function App() {
   // changed 'size' property and changed node from circle to 'router.svg'
   const myConfig = {
     nodeHighlightBehavior: true,
+    width: window.innerWidth,
     node: {
       color: `lightgreen`,
       size: 700,
       fontSize: 12,
-      highlightFontSize: 12,
+      highlightFontSize: 15,
       highlightStrokeColor: `blue`,
       svg: Router,
     },

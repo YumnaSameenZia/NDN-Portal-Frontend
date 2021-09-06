@@ -1,7 +1,7 @@
 import React from "react";
 import { InputGroup, FormControl } from "react-bootstrap";
 
-const TextInput = ({ name, title, placeHolder, inputValue, changeHandler }) => {
+const TextInput = ({ name, title, placeHolder, inputValue, changeHandler, maxLength}) => {
   return (
     <InputGroup className="mb-3">
       <InputGroup.Text
@@ -19,6 +19,7 @@ const TextInput = ({ name, title, placeHolder, inputValue, changeHandler }) => {
         placeholder={placeHolder}
         value={inputValue}
         onChange={changeHandler}
+        maxLength={maxLength}
       />
     </InputGroup>
   );
