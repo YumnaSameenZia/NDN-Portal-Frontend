@@ -210,10 +210,10 @@ const TopoBuilder = ({
   const createRingTopology = () => {
     const ring = {
       nodes: [
-        {id:"node3", fx:163, fy=341},
-        {id:"node4", fx:924, fy=363},
-        {id:"node2", fx:207, fy=125},
-        {id:"node1", fx:893, fy=105}
+        { id: "node3", fx: 163, fy: 341 },
+        { id: "node4", fx: 924, fy: 363 },
+        { id: "node2", fx: 207, fy: 125 },
+        { id: "node1", fx: 893, fy: 105 },
       ],
       links: [
         { source: "node1", target: "node4" },
@@ -252,31 +252,32 @@ const TopoBuilder = ({
         valid = value > 0 && value <= 100 ? true : false;
         break;
       case "name":
-       
-      
-       // check for duplicates 
-       const dp = topoData.nodes.filter((tp) => tp.id == value);
-       console.log(dp)
-       if (dp.length == 0){
-         valid = true
-       } else { // duplicate(s) were found
-        console.log(dp.length)
-        setErrMsg(()=>'Node with that name already exists');
-       }
+        // check for duplicates
+        const dp = topoData.nodes.filter((tp) => tp.id == value);
+        console.log(dp);
+        if (dp.length == 0) {
+          valid = true;
+        } else {
+          // duplicate(s) were found
+          console.log(dp.length);
+          setErrMsg(() => "Node with that name already exists");
+        }
 
-      // check for spaces
-      if (value.indexOf(' ') >= 0){
-        setErrMsg(()=>'Node name cannot contain spaces');
-        console.log('Contain Spaces');
-        valid = false;
-      }
+        // check for spaces
+        if (value.indexOf(" ") >= 0) {
+          setErrMsg(() => "Node name cannot contain spaces");
+          console.log("Contain Spaces");
+          valid = false;
+        }
 
         break;
       default:
         break;
     }
     if (!valid) {
-      window.alert(`Invalid ${name} value, please enter correct value.\n${errMsg}`);
+      window.alert(
+        `Invalid ${name} value, please enter correct value.\n${errMsg}`
+      );
       setNodeConfig({
         ...nodeConfig,
         [name]: "",
@@ -297,7 +298,7 @@ const TopoBuilder = ({
       placeHolder: "Enter Custom Node Name",
       inputValue: nodeConfig.name,
       changeHandler: handleNodeInputChange,
-      maxLength: 10
+      maxLength: 10,
     },
     {
       name: "memory",
@@ -418,8 +419,7 @@ const TopoBuilder = ({
     "(1) Right click on node to add Link.",
     "(2) Double Click on Node to delete it.",
     "(3) Zoom in & out using mouse scroll.",
-    "(4) Left Click for node properties."
-
+    "(4) Left Click for node properties.",
   ];
   const buildInstructions = instructions.map((instruction, index) => {
     return <p key={index}>{instruction}</p>;
