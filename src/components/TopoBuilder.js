@@ -410,12 +410,6 @@ const TopoBuilder = ({
   const instructions = [
     "(1) Right click on node to add Link.",
     "(2) Double Click on Node to delete it.",
-<<<<<<< HEAD
-    "(3) Zoom in & out using mouse scroll.",
-    "(4) Click to view current node properties.",
-=======
-    "(3) Zoom in & out using mouse scroll",
->>>>>>> parent of 3f15b82... Updated: frontend buttons
   ];
   const buildInstructions = instructions.map((instruction, index) => {
     return <p key={index}>{instruction}</p>;
