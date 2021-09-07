@@ -22,7 +22,7 @@ const TopoBuilder = ({
   const [variant, setVariant] = useState("success");
   const [message, setMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [errMsg, setErrMsg] = useState();
+  const [errMsg, setErrMsg] = useState(' ');
 
   // changes <title> of the tab with respect to the page/components
   useEffect(() => {
@@ -238,18 +238,33 @@ const TopoBuilder = ({
     switch (name) {
       case "memory":
         valid = value > 0 && value <= 1024 * 1024 ? true : false;
+        if (!valid){
+          setErrMsg(() => "");
+        }
         break;
       case "radius":
         valid = value >= 0 && value <= 1.0 ? true : false;
+        if (!valid){
+          setErrMsg(() => "");
+        }
         break;
-      case "cache":
-        valid = value > 0 && value <= 1024 * 100 ? true : false;
-        break;
+      case "cache":  
+      valid = value > 0 && value <= 1024 * 100 ? true : false;
+      if (!valid){
+        setErrMsg(() => "");
+      }  
+      break;
       case "angle":
         valid = value >= 0 && value <= 360 ? true : false;
+        if(!valid){
+          setErrMsg(() => "");
+        }
         break;
       case "cpu":
         valid = value > 0 && value <= 100 ? true : false;
+        if(!valid){  
+          setErrMsg(() => "");  
+        }  
         break;
       case "name":
         // check for duplicates
