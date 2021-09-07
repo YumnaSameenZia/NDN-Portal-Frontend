@@ -22,7 +22,7 @@ const TopoBuilder = ({
   const [variant, setVariant] = useState("success");
   const [message, setMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [errMsg, setErrMsg] = useState();
+  const [errMsg, setErrMsg] = useState(' ');
 
   // changes <title> of the tab with respect to the page/components
   useEffect(() => {
@@ -210,10 +210,10 @@ const TopoBuilder = ({
   const createRingTopology = () => {
     const ring = {
       nodes: [
-        { id: "node3", fx: 163, fy: 341 },
-        { id: "node4", fx: 924, fy: 363 },
-        { id: "node2", fx: 207, fy: 125 },
-        { id: "node1", fx: 893, fy: 105 },
+        { id: "node3", x: 163, y: 341 },
+        { id: "node4", x: 924, y: 363 },
+        { id: "node2", x: 207, y: 125 },
+        { id: "node1", x: 893, y: 105 },
       ],
       links: [
         { source: "node1", target: "node4" },
@@ -238,18 +238,33 @@ const TopoBuilder = ({
     switch (name) {
       case "memory":
         valid = value > 0 && value <= 1024 * 1024 ? true : false;
+        if (!valid){
+          setErrMsg(() => "");
+        }
         break;
       case "radius":
         valid = value >= 0 && value <= 1.0 ? true : false;
+        if (!valid){
+          setErrMsg(() => "");
+        }
         break;
-      case "cache":
-        valid = value > 0 && value <= 1024 * 100 ? true : false;
-        break;
+      case "cache":  
+      valid = value > 0 && value <= 1024 * 100 ? true : false;
+      if (!valid){
+        setErrMsg(() => "");
+      }  
+      break;
       case "angle":
         valid = value >= 0 && value <= 360 ? true : false;
+        if(!valid){
+          setErrMsg(() => "");
+        }
         break;
       case "cpu":
         valid = value > 0 && value <= 100 ? true : false;
+        if(!valid){  
+          setErrMsg(() => "");  
+        }  
         break;
       case "name":
         // check for duplicates
