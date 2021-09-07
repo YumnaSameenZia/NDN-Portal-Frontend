@@ -210,10 +210,10 @@ const TopoBuilder = ({
   const createRingTopology = () => {
     const ring = {
       nodes: [
-        { id: "node3", fx: 163, fy: 341 },
-        { id: "node4", fx: 924, fy: 363 },
-        { id: "node2", fx: 207, fy: 125 },
-        { id: "node1", fx: 893, fy: 105 },
+        { id: "node3", x: 163, y: 341 },
+        { id: "node4", x: 924, y: 363 },
+        { id: "node2", x: 207, y: 125 },
+        { id: "node1", x: 893, y: 105 },
       ],
       links: [
         { source: "node1", target: "node4" },
