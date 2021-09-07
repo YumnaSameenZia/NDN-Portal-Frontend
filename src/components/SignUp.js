@@ -18,10 +18,12 @@ const SignUp = ({ setAuthorized }) => {
 
   const handleSignUp = () => {
     let format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    let numbers = /[!0-9]+/;
     if (
       user.username !== "" &&
       user.username.length <= 10 &&
-      !format.test(user.username)
+      !format.test(user.username) && 
+      !numbers.test(user.username)
     ) {
       console.log(user.username, user.password);
       let newUser = { username: user.username, password: user.password };
