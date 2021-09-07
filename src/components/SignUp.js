@@ -17,7 +17,12 @@ const SignUp = ({ setAuthorized }) => {
   const history = useHistory();
 
   const handleSignUp = () => {
-    if (user.username !== "" && user.username.length <= 10) {
+    let format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    if (
+      user.username !== "" &&
+      user.username.length <= 10 &&
+      !format.test(user.username)
+    ) {
       console.log(user.username, user.password);
       let newUser = { username: user.username, password: user.password };
       // create a new json object and place it in the file
@@ -60,10 +65,16 @@ const SignUp = ({ setAuthorized }) => {
                   <Form.Control
                     value={user.username}
                     onChange={(event) => {
-                      setUser({
-                        username: event.target.value,
-                        password: user.password,
-                      });
+                      if (event.target.value.length <= 10) {
+                        setUser({
+                          username: event.target.value,
+                          password: user.password,
+                        });
+                      } else {
+                        window.alert(
+                          "Username cannot be longer than 10 characters!"
+                        );
+                      }
                     }}
                     data-testid="login-form-username"
                     type="text"
