@@ -1,7 +1,16 @@
 import ModalForm from "./ModalForm";
 import NodeTypes from "./NodeTypes";
 import { React, useState, useEffect } from "react";
-import { Row, Col, Button, Container, Toast, Form } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Button,
+  Container,
+  Toast,
+  Form,
+  Modal,
+  ProgressBar,
+} from "react-bootstrap";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Notification from "./Notification";
@@ -22,7 +31,7 @@ const TopoBuilder = ({
   const [variant, setVariant] = useState("success");
   const [message, setMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [errMsg, setErrMsg] = useState(' ');
+  const [errMsg, setErrMsg] = useState(" ");
 
   // changes <title> of the tab with respect to the page/components
   useEffect(() => {
@@ -46,6 +55,27 @@ const TopoBuilder = ({
     y: Math.random() * 200,
   });
 
+  /************************************************************************/
+  /************************************************************************/
+  // SHOW LOADING SCREEN AND UPLOAD TOPOLOGY STATES AND METHODS
+
+  const [count, setCount] = useState(0);
+  const [showLoading, setShowLoading] = useState(false);
+  const loadingOverlay = () => {
+    return (
+      <Modal
+        show={showLoading}
+        onHide={() => setShowLoading(false)}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Body>Performing operation, please wait awhile...</Modal.Body>
+        <ProgressBar animated now={100} />
+        <Modal.Footer></Modal.Footer>
+      </Modal>
+    );
+  };
+
   const onChange = (e) => {
     setFile(e.target.files[0]);
     console.log(file);
@@ -54,6 +84,7 @@ const TopoBuilder = ({
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setShowLoading(true);
     // appending the file selected using input
     const formData = new FormData();
     formData.append("file", file);
@@ -84,22 +115,50 @@ const TopoBuilder = ({
         console.log(err.response.data.msg);
       }
     }
-    console.log(customTopoData[0].nodes);
-    setTopoData({
-      nodes: customTopoData[0].nodes,
-      links: customTopoData[0].links,
-    });
-    setNodesNum(topoData.nodes.length + 2);
-    // SHOW ALERT
-    setShowAlert(true);
     setTimeout(() => {
-      setShowAlert(false);
+      // console.log(customTopoData[0].nodes);
+      // setTopoData({
+      //   nodes: customTopoData[0].nodes,
+      //   links: customTopoData[0].links,
+      // });
+      // setNodesNum(topoData.nodes.length + 2);
+      // // SHOW ALERT
+      // setShowAlert(true);
+      // setTimeout(() => {
+      //   setShowAlert(false);
+      // }, 3000);
+      // setShowTopologyNotification(false);
+      setShowLoading(false);
     }, 3000);
-    setShowTopologyNotification(false);
   };
+
+  useEffect(() => {
+    setCount(1);
+  }, []);
+
+  useEffect(() => {
+    if (count > 0) {
+      console.log(customTopoData[0].nodes);
+      setTopoData({
+        nodes: customTopoData[0].nodes,
+        links: customTopoData[0].links,
+      });
+      setNodesNum(topoData.nodes.length + 2);
+      // SHOW ALERT
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+      setShowTopologyNotification(false);
+      setShowLoading(false);
+    }
+  }, [customTopoData]);
+  /************************************************************************/
+  /************************************************************************/
 
   // add node different from custom node
   const addNode = (multiplier, nodeType) => {
+    console.log(nodeType);
     if (nodeType !== "Custom Node") {
       setNodeConfig({
         memory: 1024 * multiplier,
@@ -238,35 +297,37 @@ const TopoBuilder = ({
     switch (name) {
       case "memory":
         valid = value > 0 && value <= 1024 * 1024 ? true : false;
-        if (!valid){
+        if (!valid) {
           setErrMsg(() => "");
         }
         break;
       case "radius":
         valid = value >= 0 && value <= 1.0 ? true : false;
-        if (!valid){
+        if (!valid) {
           setErrMsg(() => "");
         }
         break;
-      case "cache":  
-      valid = value > 0 && value <= 1024 * 100 ? true : false;
-      if (!valid){
-        setErrMsg(() => "");
-      }  
-      break;
+      case "cache":
+        valid = value > 0 && value <= 1024 * 100 ? true : false;
+        if (!valid) {
+          setErrMsg(() => "");
+        }
+        break;
       case "angle":
         valid = value >= 0 && value <= 360 ? true : false;
-        if(!valid){
+        if (!valid) {
           setErrMsg(() => "");
         }
         break;
       case "cpu":
         valid = value > 0 && value <= 100 ? true : false;
-        if(!valid){  
-          setErrMsg(() => "");  
-        }  
+        if (!valid) {
+          setErrMsg(() => "");
+        }
         break;
       case "name":
+        let format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+        let numbers = /^[0-9]/;
         // check for duplicates
         const dp = topoData.nodes.filter((tp) => tp.id == value);
         console.log(dp);
@@ -276,6 +337,10 @@ const TopoBuilder = ({
           // duplicate(s) were found
           console.log(dp.length);
           setErrMsg(() => "Node with that name already exists");
+        }
+        if (format.test(value) || numbers.test(value)) {
+          valid = false;
+          setErrMsg(() => "Invalid node name");
         }
 
         // check for spaces
@@ -487,6 +552,7 @@ const TopoBuilder = ({
   }
   return (
     <>
+      {loadingOverlay()}
       <MessageAlert message={message} variant={variant} showAlert={showAlert} />
       <Container
         className="text-center"

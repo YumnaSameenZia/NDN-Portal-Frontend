@@ -16,30 +16,29 @@ const SignUp = ({ setAuthorized }) => {
 
   const history = useHistory();
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     let format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-    let numbers = /[!0-9]+/;
+    let numbers = /^[A-Za-z][A-Za-z_0-9]/;
     if (
       user.username !== "" &&
       user.username.length <= 10 &&
-      !format.test(user.username) && 
-      !numbers.test(user.username)
+      !format.test(user.username) &&
+      numbers.test(user.username)
     ) {
       console.log(user.username, user.password);
       let newUser = { username: user.username, password: user.password };
       // create a new json object and place it in the file
       console.log(newUser);
       // sending data to node js for adding in the user.json file
-      axios
-        .post("http://localhost:3001/signup", newUser)
-        .then((response) => {
-          setAuthorized(true);
-          history.push("/build");
-        })
-        .catch((error) => {
-          window.alert(error);
-        });
-      alert("New User Added!");
+      const result = await axios.post("http://localhost:3001/signup", newUser);
+      console.log(result.status);
+      if (result.status !== 204) {
+        setAuthorized(true);
+        history.push("/build");
+        alert("New User Added!");
+      } else {
+        window.alert("Duplicate usernames are not allowed!");
+      }
     } else {
       alert("Username or Password is not appropriate!");
     }
@@ -91,10 +90,16 @@ const SignUp = ({ setAuthorized }) => {
                   <Form.Control
                     value={user.password}
                     onChange={(event) => {
-                      setUser({
-                        username: user.username,
-                        password: event.target.value,
-                      });
+                      if (event.target.value.length <= 10) {
+                        setUser({
+                          username: user.username,
+                          password: event.target.value,
+                        });
+                      } else {
+                        window.alert(
+                          "Password cannot be longer than 10 characters!"
+                        );
+                      }
                     }}
                     data-testid="login-form-password"
                     type="password"

@@ -58,10 +58,16 @@ const SignUp = ({ setAuthorized }) => {
                     type="text"
                     value={loginInput.username}
                     onChange={(event) => {
-                      setLoginInput({
-                        username: event.target.value,
-                        password: loginInput.password,
-                      });
+                      if (event.target.value.length <= 10) {
+                        setLoginInput({
+                          username: event.target.value,
+                          password: loginInput.password,
+                        });
+                      } else {
+                        window.alert(
+                          "Username cannot be longer than 10 characters!"
+                        );
+                      }
                     }}
                   />
                   <Form.Text className="text-muted">
@@ -76,10 +82,16 @@ const SignUp = ({ setAuthorized }) => {
                     type="password"
                     value={loginInput.password}
                     onChange={(event) => {
-                      setLoginInput({
-                        username: loginInput.username,
-                        password: event.target.value,
-                      });
+                      if (event.target.value.length <= 10) {
+                        setLoginInput({
+                          username: loginInput.username,
+                          password: event.target.value,
+                        });
+                      } else {
+                        window.alert(
+                          "Password cannot be longer than 10 characters!"
+                        );
+                      }
                     }}
                   />
                 </Form.Group>

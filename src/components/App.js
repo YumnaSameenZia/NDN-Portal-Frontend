@@ -13,7 +13,10 @@ import ParticleComponent from "./ParticleComponent";
 function App() {
   // TOPOLOGY CONFIGURATION
   const [data, setData] = useState({
-    nodes: [{ id: "node1" }, { id: "node2" }],
+    nodes: [
+      { id: "node1", x: 150, y: 150 },
+      { id: "node2", x: 200, y: 200 },
+    ],
     links: [{ source: "node1", target: "node2" }],
   });
 
